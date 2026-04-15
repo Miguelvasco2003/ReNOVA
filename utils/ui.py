@@ -132,6 +132,44 @@ def inject_css():
         /* ── Divider ── */
         hr { border-color: #2A2A2A !important; }
 
+        /* ── Tabs ── */
+        .stTabs [data-baseweb="tab-list"] {
+            gap: 0;
+            border-bottom: none !important;
+            background: transparent !important;
+        }
+        .stTabs [data-baseweb="tab"] {
+            padding: 8px 20px 8px 0;
+            background: transparent !important;
+            border: none !important;
+            color: #4B5563;
+            font-size: 0.95rem;
+        }
+        .stTabs [aria-selected="true"] {
+            color: #006D77 !important;
+        }
+        .stTabs [data-baseweb="tab-highlight"],
+        .stTabs [data-baseweb="tab-border"] {
+            display: none !important;
+        }
+
+        /* ── Fixed image height in cards ── */
+        [data-testid="stImage"] img {
+            height: 180px !important;
+            width: 100% !important;
+            object-fit: cover !important;
+            border-radius: 6px;
+        }
+
+        /* ── Buttons ── */
+        .stButton > button {
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        .stButton > button[kind="primary"] {
+            border-radius: 999px !important;
+        }
+
         /* ── Hide Streamlit chrome ── */
         #MainMenu, footer, header { visibility: hidden; }
         .block-container { padding-top: 1.5rem; }
@@ -141,35 +179,65 @@ def inject_css():
     )
 
 
-def show_logo(width: int = 220, tagline: bool = False):
+def show_logo(width: int = 220, tagline: bool = False, description: bool = False):
     """Display the ReNOVA wordmark."""
     st.markdown(
-        '<h1 style="font-family:\'Playfair Display\',serif;color:#FFFFFF;margin:0;font-size:3rem;">'
-        'Re<span style="color:#006D77;">NOVA</span></h1>',
+        '<h1 style="'
+        'font-family:\'Playfair Display\',serif;'
+        'color:#FFFFFF;'
+        'margin:0 0 0.1rem;'
+        'font-size:4.5rem;'
+        'font-weight:700;'
+        'letter-spacing:-0.02em;'
+        'line-height:1;">'
+        'Re<span style="color:#006D77;">NOVA</span>'
+        '</h1>',
         unsafe_allow_html=True,
     )
     if tagline:
         st.markdown(
-            '<p class="login-tagline">Give it a NOVA life.</p>',
+            '<p style="'
+            'font-family:\'Playfair Display\',serif;'
+            'font-style:italic;'
+            'color:#83C5BE;'
+            'font-size:1.15rem;'
+            'margin:0.3rem 0 0;'
+            'letter-spacing:0.01em;">'
+            'Give it a NOVA life.'
+            '</p>',
             unsafe_allow_html=True,
         )
+    if description:
+        st.markdown(
+            '<p style="'
+            'color:#4B5563;'
+            'font-size:0.85rem;'
+            'margin:0.6rem 0 0;'
+            'letter-spacing:0.02em;">'
+            'The Nova SBE community marketplace.'
+            '</p>',
+            unsafe_allow_html=True,
+        )
+    # Teal decorative line
+    st.markdown(
+        '<div style="'
+        'width:48px;height:2px;'
+        'background:#006D77;'
+        'margin:1.2rem 0 1.4rem;'
+        '"></div>',
+        unsafe_allow_html=True,
+    )
 
 
 def show_page_header():
-    """Compact logo + tagline for top of logged-in pages."""
-    col_logo, col_tag = st.columns([1, 3])
-    with col_logo:
-        st.markdown(
-            '<h2 style="font-family:\'Playfair Display\',serif;color:#FFFFFF;margin:0;">'
-            'Re<span style="color:#006D77;">NOVA</span></h2>',
-            unsafe_allow_html=True,
-        )
-    with col_tag:
-        st.markdown(
-            '<p class="renova-tagline" style="padding-top:1rem;">Give it a NOVA life.</p>',
-            unsafe_allow_html=True,
-        )
-    st.divider()
+    """Compact logo + tagline stacked for top of logged-in pages."""
+    st.markdown(
+        '<h2 style="font-family:\'Playfair Display\',serif;color:#FFFFFF;margin:0 0 0.1rem;">'
+        'Re<span style="color:#006D77;">NOVA</span></h2>'
+        '<p style="font-family:\'Playfair Display\',serif;font-style:italic;'
+        'color:#83C5BE;font-size:0.9rem;margin:0;">Give it a NOVA life.</p>',
+        unsafe_allow_html=True,
+    )
 
 
 def sidebar_user():
@@ -184,10 +252,12 @@ def sidebar_user():
             unsafe_allow_html=True,
         )
         st.divider()
-        st.markdown(f"**{user['name'].split()[0]}** 👋")
+        st.markdown(f"**{user['name'].split()[0]}**")
         st.caption(f"{user['email']}")
+        st.write("")
+        st.page_link("pages/3_My_Profile.py", label="My Profile", use_container_width=True)
         st.divider()
-        if st.button("🚪 Logout", use_container_width=True):
+        if st.button("Logout", use_container_width=True):
             st.session_state.user = None
             st.rerun()
 
@@ -202,9 +272,9 @@ def auth_gate():
 
 def listing_card(listing: dict):
     """Render a listing card inside a bordered container."""
-    icon   = CATEGORY_ICONS.get(listing.get("category", "Other"), "📦")
+    cat    = listing.get("category", "Other")
     status = listing.get("status", "available")
-    status_label, badge_bg, badge_fg = STATUS_BADGE.get(status, STATUS_BADGE["available"])
+    status_label, _, _ = STATUS_BADGE.get(status, STATUS_BADGE["available"])
 
     with st.container(border=True):
         # Image or placeholder
@@ -214,7 +284,9 @@ def listing_card(listing: dict):
             st.image(str(img_path), use_container_width=True)
         else:
             st.markdown(
-                f'<div class="card-img-placeholder">{icon}</div>',
+                f'<div class="card-img-placeholder">'
+                f'<span style="font-size:0.85rem;color:#4B5563;letter-spacing:0.05em;">{cat.upper()}</span>'
+                f'</div>',
                 unsafe_allow_html=True,
             )
 
@@ -223,16 +295,15 @@ def listing_card(listing: dict):
 
         # Price
         if listing.get("price_type") == "offer":
-            st.markdown("💬 **Make an Offer**")
+            st.markdown("**Make an Offer**")
         else:
             st.markdown(f"**€{float(listing.get('price', 0)):.2f}**")
 
         # Badges
         cond = listing.get("condition", "")
-        cat  = listing.get("category", "")
         st.markdown(
             f'<span class="badge badge-{status_label}">{status_label.title()}</span>'
-            f'<span class="badge badge-cat">{icon} {cat}</span>'
+            f'<span class="badge badge-cat">{cat}</span>'
             f'<span class="badge badge-cond">{cond}</span>',
             unsafe_allow_html=True,
         )
@@ -249,6 +320,6 @@ def listing_card(listing: dict):
             msg   = urllib.parse.quote(f"Hi! I'm interested in your listing on ReNOVA: {listing['title']}")
             st.markdown(
                 f'<a class="wa-btn" href="https://wa.me/{clean}?text={msg}" target="_blank">'
-                f'💬 Contact on WhatsApp</a>',
+                f'Contact on WhatsApp</a>',
                 unsafe_allow_html=True,
             )
