@@ -44,6 +44,21 @@
       "status": "available",
       "image_path": "images/e80e4f50ee904818b4b027f424e5489f.webp",
       "created_at": "2026-04-15T19:30:22.315255"
+    },
+    {
+      "id": "adfce7c0cc05479f8ef1218039abdc4b",
+      "title": "Canalizador Carcavelos (20€/h)",
+      "description": "Serviço de Canalizador",
+      "price": 20.0,
+      "price_type": "fixed",
+      "category": "Services",
+      "condition": "New",
+      "seller_id": "71888",
+      "seller_name": "Miguel Teles Pepino",
+      "whatsapp": "+351 969287871",
+      "status": "available",
+      "image_path": "images/557fcbae8cb1419fa38068838509a1d5.webp",
+      "created_at": "2026-04-15T19:36:45.588532"
     }
   ]
 }
