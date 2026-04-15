@@ -1,0 +1,20 @@
+{
+  "users": {
+    "71888": {
+      "student_id": "71888",
+      "password_hash": "4a434108880ca3afb559e302fb632d92eaf51353f1fbdef55af4edfb5d4ad3fe",
+      "email": "71888@novasbe.pt",
+      "name": "Miguel Teles Pepino",
+      "whatsapp": "+351 969287871",
+      "created_at": "2026-04-14T18:31:37.505860"
+    },
+    "51446": {
+      "student_id": "51446",
+      "password_hash": "fc0c79c90ff0ab125b7441e48fba4575abadd6dba6a801fa197af86894bef88d",
+      "email": "51446@novasbe.pt",
+      "name": "Duarte",
+      "whatsapp": "+351 914075744",
+      "created_at": "2026-04-15T11:21:24.826301"
+    }
+  }
+}
