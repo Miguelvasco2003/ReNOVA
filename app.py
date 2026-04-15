@@ -133,18 +133,24 @@ with col_search:
         )
 
 with col_table:
-    rows = "".join(
-        f'<tr style="border-bottom:1px solid #1A1A1A;">'
-        f'<td style="padding:6px 8px 6px 0;color:#6B7280;font-size:0.75rem;letter-spacing:0.04em;">'
-        f'{cat.upper()}</td>'
-        f'<td style="padding:6px 0;color:#006D77;font-weight:700;font-size:0.75rem;text-align:right;">'
-        f'{sum(1 for l in all_listings if l["category"] == cat and l["status"] != "sold")}'
-        f'</td>'
-        f'</tr>'
-        for cat in CATEGORIES
-    )
+    rows_html = ""
+    for i, cat in enumerate(CATEGORIES):
+        count = sum(1 for l in all_listings if l["category"] == cat and l["status"] != "sold")
+        border = "border-top:1px solid #1A2A2A;" if i > 0 else ""
+        rows_html += (
+            f'<tr style="{border}">'
+            f'<td style="padding:9px 14px;color:#9CA3AF;font-size:0.73rem;letter-spacing:0.06em;">{cat.upper()}</td>'
+            f'<td style="padding:9px 14px;color:#83C5BE;font-weight:700;font-size:0.85rem;text-align:right;">{count}</td>'
+            f'</tr>'
+        )
     st.markdown(
-        f'<table style="width:100%;border-collapse:collapse;margin-top:0.4rem;">{rows}</table>',
+        f'<div style="border:1.5px solid #006D77;border-radius:14px;overflow:hidden;margin-top:0.4rem;background:#0D1F1F;">'
+        f'<table style="width:100%;border-collapse:collapse;">'
+        f'<thead><tr style="background:#006D77;">'
+        f'<th colspan="2" style="padding:7px 14px;color:#FFFFFF;font-size:0.7rem;letter-spacing:0.1em;font-weight:600;text-align:left;">CATEGORIES</th>'
+        f'</tr></thead>'
+        f'<tbody>{rows_html}</tbody>'
+        f'</table></div>',
         unsafe_allow_html=True,
     )
 
