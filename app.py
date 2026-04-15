@@ -24,10 +24,31 @@ if "user" not in st.session_state:
 def show_auth_page():
     _, col, _ = st.columns([1, 1.4, 1])
     with col:
-        # Logo + tagline centered
-        st.markdown('<div class="login-wrap">', unsafe_allow_html=True)
+        # ── Wordmark + tagline ──
         show_logo(width=260, tagline=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+
+        st.write("")
+
+        # ── Category pills ──
+        cat_html = "".join(
+            f'<span style="display:inline-block;padding:4px 14px;margin:0 6px 6px 0;'
+            f'border:1px solid #2A2A2A;border-radius:999px;font-size:0.78rem;'
+            f'color:#83C5BE;letter-spacing:0.04em;">{cat}</span>'
+            for cat in CATEGORIES
+        )
+        st.markdown(f'<div style="margin-bottom:1rem;">{cat_html}</div>', unsafe_allow_html=True)
+
+        # ── Available listings counter ──
+        all_listings = load_listings()["listings"]
+        available = sum(1 for l in all_listings if l["status"] == "available")
+        st.markdown(
+            f'<p style="font-size:0.85rem;color:#4B5563;margin-bottom:1.5rem;">'
+            f'<span style="color:#006D77;font-weight:600;">{available}</span>'
+            f' listing{"s" if available != 1 else ""} available right now</p>',
+            unsafe_allow_html=True,
+        )
+
+        st.divider()
 
         tab_login, tab_register = st.tabs(["Login", "Create Account"])
 
