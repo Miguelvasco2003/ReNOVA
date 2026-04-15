@@ -26,8 +26,16 @@ with st.sidebar:
 
 user = st.session_state.user
 
-show_page_header()
-st.title("➕ Post a Listing")
+col_header, col_home = st.columns([4, 1])
+with col_header:
+    show_page_header()
+with col_home:
+    st.write("")
+    if st.button("Back to Home", key="btn_home_top", type="primary", use_container_width=True):
+        st.switch_page("app.py")
+
+st.divider()
+st.title("Post a Listing")
 st.caption("Fill in the details below. Your WhatsApp number from your profile will be shown to buyers.")
 
 with st.form("post_form", clear_on_submit=True):
@@ -103,5 +111,8 @@ if submitted:
 
         st.success("Your listing has been posted!")
         st.balloons()
-        st.page_link("app.py", label="🏠 Back to Home")
-        st.page_link("pages/3_My_Profile.py", label="👤 View My Listings")
+        col1, col2 = st.columns(2)
+        with col1:
+            st.page_link("app.py", label="← Back to Home", use_container_width=True)
+        with col2:
+            st.page_link("pages/3_My_Profile.py", label="View My Listings →", use_container_width=True)
