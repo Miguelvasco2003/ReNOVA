@@ -2,7 +2,6 @@ import streamlit as st
 import uuid
 from datetime import datetime
 from pathlib import Path
-from PIL import Image
 from utils.db import load_listings, save_listings, IMAGES_DIR
 from utils.ui import inject_css, sidebar_user, auth_gate, show_page_header, CATEGORIES, CONDITIONS
 
@@ -38,7 +37,7 @@ st.divider()
 st.title("Post a Listing")
 st.caption("Fill in the details below. Your WhatsApp number from your profile will be shown to buyers.")
 
-with st.form("post_form", clear_on_submit=True):
+with st.form("post_form"):
     st.subheader("Basic Info")
     title = st.text_input("Title *", max_chars=80, placeholder="e.g. MacBook Air M2 – 8GB / 256GB")
     description = st.text_area(
@@ -63,8 +62,14 @@ with st.form("post_form", clear_on_submit=True):
     st.subheader("Photo (optional)")
     uploaded = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png", "webp"])
 
-    if uploaded:
+    # Stash file bytes inside the form so they survive form submission
+    if uploaded is not None:
+        st.session_state["_upload_bytes"] = uploaded.getvalue()
+        st.session_state["_upload_name"]  = uploaded.name
         st.image(uploaded, caption="Preview", width=280)
+    else:
+        st.session_state.pop("_upload_bytes", None)
+        st.session_state.pop("_upload_name", None)
 
     st.divider()
     submitted = st.form_submit_button("🚀 Post Listing", type="primary", use_container_width=True)
@@ -78,14 +83,15 @@ if submitted:
         st.warning("Are you sure the price is €0.00? You can also choose 'Make an offer'.")
         st.stop()
     else:
-        # Save image
+        # Save image – read from session state (file_uploader clears on submit)
         image_path = None
-        if uploaded:
-            ext = Path(uploaded.name).suffix.lower()
+        upload_bytes = st.session_state.pop("_upload_bytes", None)
+        upload_name  = st.session_state.pop("_upload_name", None)
+        if upload_bytes and upload_name:
+            ext = Path(upload_name).suffix.lower()
             filename = f"{uuid.uuid4().hex}{ext}"
             save_path = IMAGES_DIR / filename
-            img = Image.open(uploaded)
-            img.save(save_path)
+            save_path.write_bytes(upload_bytes)
             image_path = f"images/{filename}"
 
         # Build listing
