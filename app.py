@@ -102,13 +102,15 @@ with st.sidebar:
     st.page_link("pages/3_My_Profile.py",   label="My Profile")
 
 # ── Header: ReNOVA left, My Profile right ─────────────────────────────────
-col_brand, col_profile = st.columns([4, 1])
+col_brand, col_btns = st.columns([4, 1])
 with col_brand:
     show_page_header()
-with col_profile:
+with col_btns:
     st.write("")
-    if st.button("My Profile", type="primary", use_container_width=True):
+    if st.button("My Profile", use_container_width=True):
         st.switch_page("pages/3_My_Profile.py")
+    if st.button("Post a Listing", type="primary", use_container_width=True):
+        st.switch_page("pages/2_Post_Listing.py")
 
 st.divider()
 

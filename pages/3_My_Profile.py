@@ -24,8 +24,16 @@ with st.sidebar:
 user = st.session_state.user
 
 # ── Profile header ─────────────────────────────────────────────────────────
-show_page_header()
-st.title("👤 My Profile")
+col_header, col_home = st.columns([4, 1])
+with col_header:
+    show_page_header()
+with col_home:
+    st.write("")
+    if st.button("Back to Home", type="primary", use_container_width=True):
+        st.switch_page("app.py")
+
+st.divider()
+st.title("My Profile")
 
 info_col, stats_col = st.columns([2, 1])
 with info_col:
