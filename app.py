@@ -24,7 +24,6 @@ if "user" not in st.session_state:
 def show_auth_page():
     _, col, _ = st.columns([1, 1.4, 1])
     with col:
-        # ── Wordmark + tagline ──
         show_logo(width=260, tagline=True, description=True)
 
         tab_login, tab_register = st.tabs(["Login", "Create Account"])
@@ -68,17 +67,16 @@ def show_auth_page():
                         st.error(msg)
 
         st.markdown(
-            '<p style="text-align:center;font-size:0.78rem;color:#4B5563;margin-top:1.5rem;">'
+            '<p style="text-align:center;font-size:0.78rem;color:#4A6A6A;margin-top:1.5rem;">'
             'Only Nova SBE student IDs are accepted.</p>',
             unsafe_allow_html=True,
         )
 
-    # ── Available listings counter ──
     _, col_count, _ = st.columns([1, 1.4, 1])
     with col_count:
         available = sum(1 for l in load_listings()["listings"] if l["status"] == "available")
         st.markdown(
-            f'<p style="text-align:center;font-size:0.9rem;color:#4B5563;margin-top:0.5rem;">'
+            f'<p style="text-align:center;font-size:0.9rem;color:#4A6A6A;margin-top:0.5rem;">'
             f'<span style="color:#006D77;font-weight:700;font-size:1.3rem;">{available}</span>'
             f' listing{"s" if available != 1 else ""} available right now</p>',
             unsafe_allow_html=True,
@@ -95,21 +93,29 @@ if st.session_state.user is None:
 sidebar_user()
 
 with st.sidebar:
-    st.markdown("### Navigate")
-    st.page_link("app.py",                  label="Home")
-    st.page_link("pages/1_Browse.py",       label="Browse")
-    st.page_link("pages/2_Post_Listing.py", label="Post a Listing")
-    st.page_link("pages/3_My_Profile.py",   label="My Profile")
+    st.markdown(
+        '<p style="font-size:0.65rem;letter-spacing:0.14em;color:#3A5A5A;'
+        'text-transform:uppercase;margin:0.5rem 0 0.3rem;">Menu</p>',
+        unsafe_allow_html=True,
+    )
+    st.page_link("app.py",                  label="🏠  Home")
+    st.page_link("pages/1_Browse.py",       label="🔍  Browse Listings")
+    st.page_link("pages/2_Post_Listing.py", label="➕  Post a Listing")
+    st.page_link("pages/3_My_Profile.py",   label="👤  My Profile")
 
-# ── Header: ReNOVA left, My Profile right ─────────────────────────────────
-col_brand, col_btns = st.columns([4, 1])
-with col_brand:
-    show_page_header()
+# ── Page header ────────────────────────────────────────────────────────────
+col_title, col_btns = st.columns([4, 1])
+with col_title:
+    st.markdown(
+        '<h2 style="font-family:\'Playfair Display\',serif;'
+        'color:#E8F4F4;font-weight:900;margin:0;">Home</h2>',
+        unsafe_allow_html=True,
+    )
 with col_btns:
     st.write("")
     if st.button("My Profile", use_container_width=True):
         st.switch_page("pages/3_My_Profile.py")
-    if st.button("Post a Listing", type="primary", use_container_width=True):
+    if st.button("＋ Post a Listing", type="primary", use_container_width=True):
         st.switch_page("pages/2_Post_Listing.py")
 
 st.divider()
@@ -117,39 +123,33 @@ st.divider()
 # ── Load listings ──────────────────────────────────────────────────────────
 all_listings = load_listings()["listings"]
 
-# ── Search + filters (left) | Category table (right) ──────────────────────
-col_search, col_table = st.columns([3, 1])
-
-with col_search:
-    search = st.text_input("", placeholder="Search listings…", label_visibility="collapsed")
-    fc1, fc2 = st.columns(2)
-    with fc1:
-        cat_options = ["All Categories"] + CATEGORIES
-        category = st.selectbox("", cat_options, label_visibility="collapsed")
-    with fc2:
-        sort_by = st.selectbox(
-            "", ["Newest first", "Price: Low → High", "Price: High → Low"],
-            label_visibility="collapsed",
-        )
-
-with col_table:
-    rows_html = ""
-    for cat in CATEGORIES:
-        count = sum(1 for l in all_listings if l["category"] == cat and l["status"] != "sold")
-        rows_html += (
-            f'<tr>'
-            f'<td class="cat-name">{cat.upper()}</td>'
-            f'<td class="cat-count">{count}</td>'
-            f'</tr>'
-        )
-    st.markdown(
-        f'<div style="margin-top:0.4rem;">'
-        f'<table class="cat-table">'
-        f'<thead><tr><th colspan="2">Categories</th></tr></thead>'
-        f'<tbody>{rows_html}</tbody>'
-        f'</table></div>',
-        unsafe_allow_html=True,
+# ── Search + sort ──────────────────────────────────────────────────────────
+s1, s2 = st.columns([4, 1.5])
+with s1:
+    search = st.text_input("", placeholder="🔍   Search listings…", label_visibility="collapsed")
+with s2:
+    sort_by = st.selectbox(
+        "", ["Newest first", "Price: Low → High", "Price: High → Low"],
+        label_visibility="collapsed",
     )
+
+st.write("")
+
+# ── Category chips ─────────────────────────────────────────────────────────
+counts = {"All": sum(1 for l in all_listings if l["status"] != "sold")}
+for cat in CATEGORIES:
+    counts[cat] = sum(1 for l in all_listings if l["category"] == cat and l["status"] != "sold")
+
+selected_cat = st.radio(
+    "category_filter",
+    ["All"] + CATEGORIES,
+    horizontal=True,
+    label_visibility="collapsed",
+    format_func=lambda x: (
+        f"All ({counts['All']})" if x == "All"
+        else f"{CATEGORY_ICONS[x]} {x} ({counts[x]})"
+    ),
+)
 
 st.write("")
 
@@ -159,8 +159,8 @@ listings = [l for l in all_listings if l["status"] != "sold"]
 if search:
     q = search.lower()
     listings = [l for l in listings if q in l["title"].lower() or q in l.get("description", "").lower()]
-if category != "All Categories":
-    listings = [l for l in listings if l["category"] == category]
+if selected_cat != "All":
+    listings = [l for l in listings if l["category"] == selected_cat]
 
 if sort_by == "Newest first":
     listings = sorted(listings, key=lambda x: x["created_at"], reverse=True)
@@ -169,7 +169,25 @@ elif sort_by == "Price: Low → High":
 else:
     listings = sorted(listings, key=lambda x: x.get("price", 0) if x.get("price_type") == "fixed" else 0, reverse=True)
 
-# ── Listings grid ─────────────────────────────────────────────────────────
+# ── Listings heading + count ───────────────────────────────────────────────
+lc1, lc2 = st.columns([4, 1])
+with lc1:
+    st.markdown(
+        '<h3 style="font-family:\'Playfair Display\',serif;color:#E8F4F4;margin:0;">Listings</h3>',
+        unsafe_allow_html=True,
+    )
+with lc2:
+    st.markdown(
+        f'<div style="text-align:right;padding-top:6px;">'
+        f'<span style="background:#0F2020;border:1px solid #1E3232;border-radius:999px;'
+        f'padding:4px 12px;font-size:0.75rem;color:#4A6A6A;">'
+        f'{len(listings)} result{"s" if len(listings) != 1 else ""}</span></div>',
+        unsafe_allow_html=True,
+    )
+
+st.write("")
+
+# ── Listings grid ──────────────────────────────────────────────────────────
 if not listings:
     st.info("No listings yet — be the first to post!")
     st.page_link("pages/2_Post_Listing.py", label="➕ Post a Listing")

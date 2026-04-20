@@ -279,6 +279,38 @@ def inject_css():
             color: #4A6A6A !important;
         }
 
+        /* ── Category chips (radio styled as pills) ── */
+        div[data-testid="stRadio"] > div {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 8px !important;
+            background: transparent !important;
+        }
+        div[data-testid="stRadio"] > div > label {
+            background: #162424 !important;
+            border: 1px solid #1E3232 !important;
+            border-radius: 999px !important;
+            padding: 6px 16px !important;
+            cursor: pointer !important;
+            font-size: 0.82rem !important;
+            color: #A8C8C8 !important;
+            transition: all 0.15s !important;
+            margin: 0 !important;
+        }
+        div[data-testid="stRadio"] > div > label:hover {
+            border-color: #006D77 !important;
+            color: #E8F4F4 !important;
+        }
+        div[data-testid="stRadio"] > div > label:has(input:checked) {
+            background: #006D77 !important;
+            border-color: #006D77 !important;
+            color: #FFFFFF !important;
+            font-weight: 600 !important;
+        }
+        div[data-testid="stRadio"] > div > label > div:first-child {
+            display: none !important;
+        }
+
         /* ── Card image placeholder ── */
         .card-img-placeholder {
             width: 100%;
