@@ -396,10 +396,27 @@ def inject_css():
     # ── Dynamic: hide sidebar when closed ──────────────────────────────────
     if not st.session_state.get("sidebar_open", True):
         st.markdown(
-            "<style>"
-            "section[data-testid='stSidebar']{display:none!important;}"
-            "section[data-testid='stMain']{margin-left:0!important;padding-left:0!important;}"
-            "</style>",
+            """<style>
+            /* Hide sidebar panel completely */
+            section[data-testid="stSidebar"],
+            [data-testid="stSidebar"],
+            div[data-testid="stSidebar"] {
+                display: none !important;
+                width: 0px !important;
+                min-width: 0px !important;
+                max-width: 0px !important;
+                overflow: hidden !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            /* Remove the left gap the sidebar leaves behind */
+            [data-testid="stMain"] {
+                margin-left: 0px !important;
+                padding-left: 0px !important;
+            }
+            .main { margin-left: 0px !important; }
+            [data-testid="stAppViewContainer"] { padding-left: 0px !important; }
+            </style>""",
             unsafe_allow_html=True,
         )
 
@@ -483,7 +500,6 @@ def sidebar_user():
         # ── Close button at the very top ──────────────────────────────────
         if st.button("✕ Fechar", key="sidebar_close_btn", use_container_width=True):
             st.session_state.sidebar_open = False
-            st.rerun()
 
         # ── Nav links at the top ───────────────────────────────────────────
         st.markdown(
@@ -537,14 +553,13 @@ def page_navbar(
 
     col_menu, col_logo, col_search, col_saved, col_profile = st.columns([0.35, 1.0, 4.5, 1.0, 0.8])
 
-    # ── Hamburger — pure Python toggle via session_state ──────────────────
+    # ── Hamburger — toggles sidebar_open; Streamlit reruns automatically ──
     if "sidebar_open" not in st.session_state:
         st.session_state.sidebar_open = True
     with col_menu:
         if st.button("☰", key=f"hamburger_{search_key}", type="primary",
                      help="Abrir/fechar menu"):
             st.session_state.sidebar_open = not st.session_state.sidebar_open
-            st.rerun()
 
     # ── Logo ───────────────────────────────────────────────────────────────
     with col_logo:

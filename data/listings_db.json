@@ -75,6 +75,27 @@
       ],
       "image_path": "images/557fcbae8cb1419fa38068838509a1d5.webp",
       "created_at": "2026-04-15T19:36:45.588532"
+    },
+    {
+      "id": "d2753331c92742de94568fddcff77128",
+      "title": "Double room in Carcavelos",
+      "description": "T4 house",
+      "seller_id": "71888",
+      "seller_name": "Miguel Teles Pepino",
+      "whatsapp": "+351 969287871",
+      "status": "available",
+      "images": [],
+      "image_path": null,
+      "created_at": "2026-05-09T00:34:48.071896",
+      "listing_type": "housing",
+      "location": "Carcavelos",
+      "price": 400.0,
+      "rent_period": "month",
+      "rooms": 1,
+      "available_from": "",
+      "price_type": "fixed",
+      "category": "Housing",
+      "condition": ""
     }
   ]
 }
