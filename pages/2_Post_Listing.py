@@ -32,7 +32,10 @@ with col_home:
 
 st.divider()
 
-# ── Listing type selector ──────────────────────────────────────────────────
+# ── Listing type selector (pre-select if coming from housing button) ───────
+_default_type = st.session_state.pop("post_listing_type", "marketplace")
+_type_idx = 1 if _default_type == "housing" else 0
+
 st.markdown("**What are you posting?**")
 listing_type = st.radio(
     "listing_type_sel",
@@ -40,6 +43,7 @@ listing_type = st.radio(
     horizontal=True,
     label_visibility="collapsed",
     key="post_type",
+    index=_type_idx,
 )
 is_housing = listing_type == "Housing / Room"
 st.caption(

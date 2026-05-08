@@ -89,7 +89,7 @@ def show_auth_page():
                         st.error(msg)
 
         st.markdown(
-            '<p style="text-align:center;font-size:0.78rem;color:#4A6A6A;margin-top:1.5rem;">'
+            '<p style="text-align:center;font-size:0.78rem;color:#444444;margin-top:1.5rem;">'
             'Only Nova SBE student IDs are accepted.</p>',
             unsafe_allow_html=True,
         )
@@ -98,7 +98,7 @@ def show_auth_page():
     with col_count:
         available = sum(1 for l in load_listings()["listings"] if l["status"] == "available")
         st.markdown(
-            f'<p style="text-align:center;font-size:0.9rem;color:#4A6A6A;margin-top:0.5rem;">'
+            f'<p style="text-align:center;font-size:0.9rem;color:#444444;margin-top:0.5rem;">'
             f'<span style="color:#006D77;font-weight:700;font-size:1.3rem;">{available}</span>'
             f' listing{"s" if available != 1 else ""} available right now</p>',
             unsafe_allow_html=True,
@@ -113,24 +113,21 @@ if st.session_state.user is None:
 
 # ── Logged-in layout ───────────────────────────────────────────────────────
 sidebar_user()
-
 with st.sidebar:
     sidebar_nav()
 
-# ── Navbar with search ─────────────────────────────────────────────────────
+# ── Navbar ─────────────────────────────────────────────────────────────────
 search = page_navbar(search_placeholder="Search listings…", search_key="home_search")
 
-# ── Action buttons row ─────────────────────────────────────────────────────
-col_title, col_btns = st.columns([4, 1])
+# ── Page title + Post button ───────────────────────────────────────────────
+col_title, col_post = st.columns([5, 1])
 with col_title:
     st.markdown(
         '<h2 style="font-family:\'Playfair Display\',serif;'
         'color:#E8F4F4;font-weight:900;margin:0;">Home</h2>',
         unsafe_allow_html=True,
     )
-with col_btns:
-    if st.button("My Profile", use_container_width=True, key="btn_profile"):
-        st.switch_page("pages/3_My_Profile.py")
+with col_post:
     if st.button("Post a Listing", type="primary", use_container_width=True, key="btn_post"):
         st.switch_page("pages/2_Post_Listing.py")
 
@@ -139,10 +136,22 @@ st.divider()
 # ── Load all listings ──────────────────────────────────────────────────────
 all_listings = load_listings()["listings"]
 marketplace  = [l for l in all_listings if l.get("listing_type", "marketplace") == "marketplace"]
-housing      = [l for l in all_listings if l.get("listing_type") == "housing"]
+housing_lst  = [l for l in all_listings if l.get("listing_type") == "housing"]
 
-# ── Sort control ───────────────────────────────────────────────────────────
-_, sort_col = st.columns([4, 1.5])
+# ── Category chips + sort on same row ──────────────────────────────────────
+counts = {"All": sum(1 for l in marketplace if l["status"] != "sold")}
+for cat in CATEGORIES:
+    counts[cat] = sum(1 for l in marketplace if l["category"] == cat and l["status"] != "sold")
+
+chips_col, sort_col = st.columns([5, 1.5])
+with chips_col:
+    selected_cat = st.radio(
+        "category_filter",
+        ["All"] + CATEGORIES,
+        horizontal=True,
+        label_visibility="collapsed",
+        format_func=lambda x: f"All ({counts['All']})" if x == "All" else f"{x} ({counts[x]})",
+    )
 with sort_col:
     sort_by = st.selectbox(
         "",
@@ -150,19 +159,6 @@ with sort_col:
         label_visibility="collapsed",
         key="home_sort",
     )
-
-# ── Category chips ─────────────────────────────────────────────────────────
-counts = {"All": sum(1 for l in marketplace if l["status"] != "sold")}
-for cat in CATEGORIES:
-    counts[cat] = sum(1 for l in marketplace if l["category"] == cat and l["status"] != "sold")
-
-selected_cat = st.radio(
-    "category_filter",
-    ["All"] + CATEGORIES,
-    horizontal=True,
-    label_visibility="collapsed",
-    format_func=lambda x: f"All ({counts['All']})" if x == "All" else f"{x} ({counts[x]})",
-)
 
 st.write("")
 
@@ -182,7 +178,7 @@ elif sort_by == "Price: Low to High":
 else:
     listings = sorted(listings, key=lambda x: x.get("price", 0) if x.get("price_type") == "fixed" else 0, reverse=True)
 
-# ── Listings heading ───────────────────────────────────────────────────────
+# ── Results count ──────────────────────────────────────────────────────────
 lc1, lc2 = st.columns([4, 1])
 with lc1:
     st.markdown(
@@ -192,8 +188,8 @@ with lc1:
 with lc2:
     st.markdown(
         f'<div style="text-align:right;padding-top:6px;">'
-        f'<span style="background:#0F2020;border:1px solid #1E3232;border-radius:999px;'
-        f'padding:4px 12px;font-size:0.75rem;color:#4A6A6A;">'
+        f'<span style="background:#0D0D0D;border:1px solid #1A1A1A;border-radius:999px;'
+        f'padding:4px 12px;font-size:0.75rem;color:#444444;">'
         f'{len(listings)} result{"s" if len(listings) != 1 else ""}</span></div>',
         unsafe_allow_html=True,
     )
@@ -217,25 +213,35 @@ else:
 st.markdown("<br/>", unsafe_allow_html=True)
 st.divider()
 
-h1, h2 = st.columns([4, 1])
-with h1:
-    st.markdown(
-        '<h3 style="font-family:\'Playfair Display\',serif;color:#E8F4F4;margin:0;">Housing</h3>',
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        '<p style="color:#4A6A6A;font-size:0.82rem;margin:2px 0 0;">Rooms and apartments from the Nova SBE community</p>',
-        unsafe_allow_html=True,
-    )
-with h2:
-    if st.button("Post Housing", type="primary", use_container_width=True, key="btn_post_housing"):
+# Housing header banner
+st.markdown(
+    '<div class="housing-section-header">'
+    '<h3 style="font-family:\'Playfair Display\',serif;color:#E8F4F4;margin:0 0 4px;font-size:1.4rem;">'
+    'Housing</h3>'
+    '<p style="color:#6A5A8A;font-size:0.85rem;margin:0 0 12px;">'
+    'Rooms and apartments shared by the Nova SBE community — find your next home near campus.</p>'
+    '</div>',
+    unsafe_allow_html=True,
+)
+
+post_h_col, _ = st.columns([1, 4])
+with post_h_col:
+    if st.button("Post a Room or Apartment", type="primary", use_container_width=True, key="btn_post_housing"):
+        st.session_state.post_listing_type = "housing"
         st.switch_page("pages/2_Post_Listing.py")
 
 st.write("")
 
-active_housing = [l for l in housing if l["status"] != "sold"]
+active_housing = [l for l in housing_lst if l["status"] != "sold"]
 if not active_housing:
-    st.info("No housing listings yet.")
+    st.markdown(
+        '<div style="background:#050010;border:1px dashed #2A1A5A;border-radius:12px;'
+        'padding:24px;text-align:center;">'
+        '<p style="color:#3A2A5A;font-size:0.9rem;margin:0;">'
+        'No housing listings yet. Be the first to post a room!</p>'
+        '</div>',
+        unsafe_allow_html=True,
+    )
 else:
     COLS = 3
     for row_start in range(0, len(active_housing), COLS):

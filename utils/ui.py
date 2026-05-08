@@ -19,7 +19,6 @@ from utils.db import (
 CATEGORIES = ["Furniture", "Books", "Electronics", "Clothing", "Services", "Other"]
 CONDITIONS  = ["New", "Like New", "Good", "Fair", "Poor"]
 
-# Short initials shown in placeholder cards (no emojis)
 CATEGORY_INITIALS = {
     "Furniture":   "FN",
     "Books":       "BK",
@@ -28,10 +27,7 @@ CATEGORY_INITIALS = {
     "Services":    "SV",
     "Other":       "OT",
 }
-
-# Keep this dict for any code that imports CATEGORY_ICONS — values are now
-# plain text abbreviations instead of emoji characters.
-CATEGORY_ICONS = CATEGORY_INITIALS
+CATEGORY_ICONS = CATEGORY_INITIALS   # backward-compat alias
 
 STATUS_BADGE = {
     "available": ("available", "#006D77", "#FFFFFF"),
@@ -51,14 +47,14 @@ def inject_css():
         /* ── Base ── */
         html, body, [class*="css"] { font-family: 'Inter', sans-serif !important; }
 
-        /* ── App background ── */
-        .stApp { background: #0C1A1A !important; }
+        /* ── Pure black background matching logo ── */
+        .stApp { background: #000000 !important; }
         section[data-testid="stSidebar"] {
-            background: #111F1F !important;
-            border-right: 1px solid #1E3232 !important;
+            background: #080808 !important;
+            border-right: 1px solid #1A1A1A !important;
         }
         .block-container {
-            padding-top: 1.4rem !important;
+            padding-top: 1.2rem !important;
             padding-bottom: 2rem !important;
         }
 
@@ -66,7 +62,7 @@ def inject_css():
         #MainMenu, footer, header { visibility: hidden; }
 
         /* ── Divider ── */
-        hr { border-color: #1E3232 !important; }
+        hr { border-color: #1A1A1A !important; }
 
         /* ── Sidebar text ── */
         section[data-testid="stSidebar"] * { color: #A8C8C8 !important; }
@@ -77,14 +73,14 @@ def inject_css():
             border-radius: 8px !important;
             font-weight: 500 !important;
             font-family: 'Inter', sans-serif !important;
-            background: #162424 !important;
-            border: 1px solid #1E3232 !important;
+            background: #0D0D0D !important;
+            border: 1px solid #1A1A1A !important;
             color: #A8C8C8 !important;
             transition: all 0.15s !important;
         }
         .stButton > button:hover {
-            background: #1E3232 !important;
-            border-color: #2A4A4A !important;
+            background: #181818 !important;
+            border-color: #2A2A2A !important;
             color: #E8F4F4 !important;
         }
         .stButton > button[kind="primary"] {
@@ -105,8 +101,8 @@ def inject_css():
         .stTextInput > div > div > input,
         .stTextArea > div > div > textarea,
         .stNumberInput > div > div > input {
-            background: #111F1F !important;
-            border: 1px solid #1E3232 !important;
+            background: #0D0D0D !important;
+            border: 1px solid #1A1A1A !important;
             border-radius: 8px !important;
             color: #E8F4F4 !important;
             font-family: 'Inter', sans-serif !important;
@@ -117,12 +113,12 @@ def inject_css():
             box-shadow: 0 0 0 3px rgba(0,109,119,0.15) !important;
         }
         .stTextInput > div > div > input::placeholder,
-        .stTextArea > div > div > textarea::placeholder { color: #3A5A5A !important; }
+        .stTextArea > div > div > textarea::placeholder { color: #3A3A3A !important; }
 
         /* ── Selectbox ── */
         .stSelectbox > div > div {
-            background: #111F1F !important;
-            border: 1px solid #1E3232 !important;
+            background: #0D0D0D !important;
+            border: 1px solid #1A1A1A !important;
             border-radius: 8px !important;
             color: #E8F4F4 !important;
         }
@@ -130,14 +126,14 @@ def inject_css():
         /* ── Tabs ── */
         .stTabs [data-baseweb="tab-list"] {
             gap: 0;
-            border-bottom: 1px solid #1E3232 !important;
+            border-bottom: 1px solid #1A1A1A !important;
             background: transparent !important;
         }
         .stTabs [data-baseweb="tab"] {
             padding: 8px 20px 10px 0 !important;
             background: transparent !important;
             border: none !important;
-            color: #3A5A5A !important;
+            color: #3A3A3A !important;
             font-size: 0.9rem !important;
             font-family: 'Inter', sans-serif !important;
             font-weight: 500 !important;
@@ -153,28 +149,28 @@ def inject_css():
 
         /* ── Expander ── */
         .streamlit-expanderHeader {
-            background: #111F1F !important;
-            border: 1px solid #1E3232 !important;
+            background: #0D0D0D !important;
+            border: 1px solid #1A1A1A !important;
             border-radius: 10px !important;
             color: #A8C8C8 !important;
         }
         .streamlit-expanderContent {
-            background: #0F1E1E !important;
-            border: 1px solid #1E3232 !important;
+            background: #080808 !important;
+            border: 1px solid #1A1A1A !important;
             border-top: none !important;
         }
 
         /* ── Bordered containers / cards ── */
         [data-testid="stVerticalBlockBorderWrapper"] > div {
-            background: #0F2020 !important;
-            border: 1px solid #1E3232 !important;
+            background: #0D0D0D !important;
+            border: 1px solid #1A1A1A !important;
             border-radius: 14px !important;
             transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s !important;
         }
         [data-testid="stVerticalBlockBorderWrapper"] > div:hover {
-            border-color: #004D55 !important;
+            border-color: #006D77 !important;
             transform: translateY(-2px) !important;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.35) !important;
+            box-shadow: 0 8px 24px rgba(0,109,119,0.12) !important;
         }
 
         /* ── Card images (scoped to bordered containers only) ── */
@@ -187,14 +183,14 @@ def inject_css():
 
         /* ── Metrics ── */
         [data-testid="stMetric"] {
-            background: #0F2020 !important;
-            border: 1px solid #1E3232 !important;
+            background: #0D0D0D !important;
+            border: 1px solid #1A1A1A !important;
             border-radius: 12px !important;
             padding: 14px 16px !important;
         }
         [data-testid="stMetricValue"] { color: #83C5BE !important; font-weight: 700 !important; }
         [data-testid="stMetricLabel"] {
-            color: #4A6A6A !important;
+            color: #3A3A3A !important;
             font-size: 0.72rem !important;
             text-transform: uppercase !important;
             letter-spacing: 0.08em !important;
@@ -202,29 +198,30 @@ def inject_css():
 
         /* ── Alerts ── */
         .stAlert {
-            background: #0A2A1A !important;
-            border: 1px solid #1A4A2A !important;
+            background: #050F05 !important;
+            border: 1px solid #0A2A0A !important;
             border-radius: 10px !important;
             color: #6EE7B7 !important;
         }
 
-        /* ── Radio chips ── */
+        /* ── Radio chips (category filters) ── */
         div[data-testid="stRadio"] > div {
             display: flex !important;
             flex-wrap: wrap !important;
-            gap: 8px !important;
+            gap: 6px !important;
             background: transparent !important;
         }
         div[data-testid="stRadio"] > div > label {
-            background: #162424 !important;
-            border: 1px solid #1E3232 !important;
+            background: #0D0D0D !important;
+            border: 1px solid #1A1A1A !important;
             border-radius: 999px !important;
-            padding: 6px 16px !important;
+            padding: 5px 14px !important;
             cursor: pointer !important;
-            font-size: 0.82rem !important;
+            font-size: 0.8rem !important;
             color: #A8C8C8 !important;
             transition: all 0.15s !important;
             margin: 0 !important;
+            white-space: nowrap !important;
         }
         div[data-testid="stRadio"] > div > label:hover {
             border-color: #006D77 !important;
@@ -240,15 +237,15 @@ def inject_css():
 
         /* ── File uploader ── */
         [data-testid="stFileUploader"] {
-            background: #111F1F !important;
-            border: 2px dashed #1E3232 !important;
+            background: #0D0D0D !important;
+            border: 2px dashed #1A1A1A !important;
             border-radius: 10px !important;
         }
 
         /* ── Labels ── */
         label, .stTextInput label, .stSelectbox label,
         .stTextArea label, .stNumberInput label {
-            color: #7A9A9A !important;
+            color: #555555 !important;
             font-size: 0.8rem !important;
             font-weight: 500 !important;
             letter-spacing: 0.03em !important;
@@ -256,8 +253,8 @@ def inject_css():
 
         /* ── Forms ── */
         [data-testid="stForm"] {
-            background: #0F2020 !important;
-            border: 1px solid #1E3232 !important;
+            background: #0D0D0D !important;
+            border: 1px solid #1A1A1A !important;
             border-radius: 16px !important;
             padding: 1.5rem !important;
         }
@@ -268,7 +265,7 @@ def inject_css():
         /* ── Typography ── */
         h1, h2, h3 { font-family: 'Playfair Display', serif !important; color: #E8F4F4 !important; }
         p, span, div { color: #A8C8C8; }
-        .stCaption, small { color: #4A6A6A !important; }
+        .stCaption, small { color: #555555 !important; }
 
         /* ── Card image placeholder ── */
         .card-img-placeholder {
@@ -279,19 +276,19 @@ def inject_css():
             align-items: center;
             justify-content: center;
             gap: 6px;
-            background: linear-gradient(135deg, #0A1818 0%, #162424 100%);
+            background: linear-gradient(135deg, #050505 0%, #0D0D0D 100%);
             border-radius: 8px 8px 0 0;
         }
         .card-img-placeholder .cat-abbr {
             font-size: 1.8rem;
             font-weight: 700;
-            color: #1E3A3A;
+            color: #1A1A1A;
             font-family: 'Playfair Display', serif;
         }
         .card-img-placeholder .cat-label {
             font-size: 0.6rem;
             letter-spacing: 0.16em;
-            color: #2A4A4A;
+            color: #222222;
             text-transform: uppercase;
         }
 
@@ -305,17 +302,17 @@ def inject_css():
             margin-right: 4px;
             letter-spacing: 0.02em;
         }
-        .badge-available { background: #003D3F; color: #83C5BE; }
-        .badge-reserved  { background: #3A2800; color: #FDE68A; }
-        .badge-sold      { background: #3A0000; color: #FCA5A5; }
-        .badge-cat       { background: #0F2A2A; color: #6BB8B8; }
-        .badge-cond      { background: #1A2A2A; color: #4A6A6A; }
-        .badge-housing   { background: #1A0A3A; color: #B4A0FF; border: 1px solid #2A1A5A; }
+        .badge-available { background: #001A1C; color: #83C5BE; border: 1px solid #003D3F; }
+        .badge-reserved  { background: #1A1000; color: #FDE68A; border: 1px solid #3A2800; }
+        .badge-sold      { background: #1A0000; color: #FCA5A5; border: 1px solid #3A0000; }
+        .badge-cat       { background: #001A1C; color: #4A8A8A; }
+        .badge-cond      { background: #0D0D0D; color: #444444; border: 1px solid #1A1A1A; }
+        .badge-housing   { background: #0A0020; color: #B4A0FF; border: 1px solid #2A1A5A; }
 
         /* ── Card meta line ── */
         .card-meta {
             font-size: 0.72rem;
-            color: #3A5A5A;
+            color: #333333;
             margin-top: 4px;
             margin-bottom: 10px;
         }
@@ -323,38 +320,53 @@ def inject_css():
         /* ── WhatsApp button ── */
         .wa-btn {
             display: block;
-            background: #1A4A3A;
+            background: #001A0D;
             color: #25D366 !important;
             text-decoration: none !important;
             text-align: center;
-            padding: 8px 0;
+            padding: 9px 0;
             border-radius: 8px;
-            font-size: 0.8rem;
+            font-size: 0.82rem;
             font-weight: 600;
             margin-top: 4px;
-            border: 1px solid #1e5a40;
+            border: 1px solid #0A3A1A;
             transition: all 0.15s;
         }
-        .wa-btn:hover { background: #25D366; color: #fff !important; }
+        .wa-btn:hover { background: #25D366; color: #000 !important; }
 
-        /* ── Housing card banner ── */
-        .housing-badge-row { margin-bottom: 6px; }
-
-        /* ── Navbar row ── */
-        .renova-navbar {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 8px 0 12px;
-            border-bottom: 1px solid #1E3232;
-            margin-bottom: 16px;
+        /* ── Hamburger button ── */
+        .ham-btn {
+            background: #0D0D0D;
+            border: 1px solid #1A1A1A;
+            color: #A8C8C8;
+            border-radius: 6px;
+            padding: 7px 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            line-height: 1;
+            transition: all 0.15s;
+            margin-top: 4px;
         }
+        .ham-btn:hover { background: #181818; color: #E8F4F4; border-color: #006D77; }
+
+        /* ── Navbar saved/profile mini-buttons ── */
+        .nav-action-btn {
+            background: transparent !important;
+            border: none !important;
+            color: #555555 !important;
+            font-size: 0.78rem !important;
+            padding: 4px 6px !important;
+            border-radius: 6px !important;
+            cursor: pointer !important;
+            white-space: nowrap !important;
+        }
+        .nav-action-btn:hover { color: #83C5BE !important; }
 
         /* ── Category table ── */
         .cat-table {
             width: 100%;
             border-collapse: collapse;
-            border: 1.5px solid #1E3232;
+            border: 1px solid #1A1A1A;
             border-radius: 12px;
             overflow: hidden;
         }
@@ -368,19 +380,18 @@ def inject_css():
             text-align: left;
             text-transform: uppercase;
         }
-        .cat-table tbody tr { border-top: 1px solid #1E3232; }
+        .cat-table tbody tr { border-top: 1px solid #1A1A1A; }
         .cat-table tbody td { padding: 9px 14px; }
-        .cat-table .cat-name {
-            color: #4A6A6A;
-            font-size: 0.72rem;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-        }
-        .cat-table .cat-count {
-            color: #83C5BE;
-            font-weight: 700;
-            font-size: 0.85rem;
-            text-align: right;
+        .cat-table .cat-name { color: #444444; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; }
+        .cat-table .cat-count { color: #83C5BE; font-weight: 700; font-size: 0.85rem; text-align: right; }
+
+        /* ── Housing section ── */
+        .housing-section-header {
+            background: linear-gradient(135deg, #000000 0%, #0A0020 100%);
+            border: 1px solid #2A1A5A;
+            border-radius: 14px;
+            padding: 20px 24px;
+            margin-bottom: 16px;
         }
         </style>
         """,
@@ -411,8 +422,7 @@ def show_logo(width: int = 300, tagline: bool = False, description: bool = False
     if tagline:
         st.markdown(
             '<p style="font-family:\'Playfair Display\',serif;font-style:italic;'
-            'color:#83C5BE;font-size:1.1rem;margin:0.3rem 0 0;letter-spacing:0.01em;">'
-            "Give it a NOVA life.</p>",
+            'color:#83C5BE;font-size:1.1rem;margin:0.3rem 0 0;">Give it a NOVA life.</p>',
             unsafe_allow_html=True,
         )
 
@@ -446,8 +456,8 @@ def _avatar_html(student_id: str, name: str, size: int = 36) -> str:
     initials = "".join(w[0].upper() for w in name.split()[:2])
     fs = max(10, int(size * 0.32))
     return (
-        f'<div style="width:{size}px;height:{size}px;border-radius:50%;background:#004D55;'
-        f'display:flex;align-items:center;justify-content:center;'
+        f'<div style="width:{size}px;height:{size}px;border-radius:50%;background:#001A1C;'
+        f'border:2px solid #006D77;display:flex;align-items:center;justify-content:center;'
         f'font-weight:700;font-size:{fs}px;color:#83C5BE;flex-shrink:0;">{initials}</div>'
     )
 
@@ -463,7 +473,7 @@ def sidebar_user():
         if b64:
             st.markdown(
                 f'<img src="data:image/png;base64,{b64}" '
-                f'style="width:140px;display:block;margin-bottom:8px;"/>',
+                f'style="width:150px;display:block;margin-bottom:8px;"/>',
                 unsafe_allow_html=True,
             )
         else:
@@ -472,9 +482,7 @@ def sidebar_user():
                 'Re<span style="color:#006D77;">NOVA</span></h3>',
                 unsafe_allow_html=True,
             )
-
         st.divider()
-
         avatar = _avatar_html(user["student_id"], user["name"], size=38)
         email  = user.get("email", f"{user['student_id']}@novasbe.pt")
         st.markdown(
@@ -482,7 +490,7 @@ def sidebar_user():
             f'{avatar}'
             f'<div><div style="font-size:0.85rem;font-weight:600;color:#E8F4F4;">'
             f'{user["name"].split()[0]}</div>'
-            f'<div style="font-size:0.72rem;color:#4A6A6A;">{email}</div></div>'
+            f'<div style="font-size:0.72rem;color:#444444;">{email}</div></div>'
             f'</div>',
             unsafe_allow_html=True,
         )
@@ -492,22 +500,76 @@ def sidebar_user():
             st.rerun()
 
 
-# ── Page navbar (top header row) ───────────────────────────────────────────
+# ── Sidebar nav ────────────────────────────────────────────────────────────
 
-def page_navbar(search_placeholder: str = "Search listings…", search_key: str = "navbar_search"):
+def sidebar_nav():
+    with st.sidebar:
+        st.markdown(
+            '<p style="font-size:0.65rem;letter-spacing:0.14em;color:#333333;'
+            'text-transform:uppercase;margin:0.5rem 0 0.3rem;">Menu</p>',
+            unsafe_allow_html=True,
+        )
+        st.page_link("app.py",                  label="Home")
+        st.page_link("pages/1_Browse.py",        label="Browse Listings")
+        st.page_link("pages/2_Post_Listing.py",  label="Post a Listing")
+        st.page_link("pages/3_My_Profile.py",    label="My Profile")
+
+
+# ── Page navbar ────────────────────────────────────────────────────────────
+
+def page_navbar(
+    search_placeholder: str = "Search listings…",
+    search_key: str = "navbar_search",
+) -> str:
     """
-    Render the top navbar: logo | search bar | favorites count | profile avatar.
-    Returns the current search query string.
+    Top navbar: hamburger | logo | search bar | Saved button | avatar button.
+    Returns the current search query.
     """
     user = st.session_state.get("user")
-    col_logo, col_search, col_actions = st.columns([1, 4, 1.2])
 
+    # JS to toggle Streamlit's native sidebar button (handles both expand & collapse)
+    _sidebar_js = """
+    (function(){
+        var selectors = [
+            '[data-testid="collapsedControl"] button',
+            '[data-testid="stSidebarCollapseButton"] button',
+            'button[aria-label="Close sidebar"]',
+            'button[aria-label="Open sidebar"]'
+        ];
+        for(var s of selectors){
+            var btn = document.querySelector(s);
+            if(btn){ btn.click(); return; }
+        }
+        // Fallback: iterate all buttons
+        var all = document.querySelectorAll('button');
+        for(var b of all){
+            var tid = b.getAttribute('data-testid') || '';
+            var ari = b.getAttribute('aria-label') || '';
+            if(tid.toLowerCase().includes('collapse') || ari.toLowerCase().includes('sidebar')){
+                b.click(); return;
+            }
+        }
+    })()
+    """.replace("\n", " ").replace("    ", "")
+
+    col_ham, col_logo, col_search, col_saved, col_profile = st.columns(
+        [0.4, 1.0, 4.5, 1.0, 0.8]
+    )
+
+    # ── Hamburger ──────────────────────────────────────────────────────────
+    with col_ham:
+        st.markdown(
+            f'<button class="ham-btn" onclick="{_sidebar_js}">&#9776;</button>',
+            unsafe_allow_html=True,
+        )
+
+    # ── Logo ───────────────────────────────────────────────────────────────
     with col_logo:
         b64 = _logo_b64()
         if b64:
             st.markdown(
                 f'<img src="data:image/png;base64,{b64}" '
-                f'style="height:42px;width:auto;display:block;margin-top:4px;"/>',
+                f'style="height:56px;width:auto;display:block;margin-top:2px;"/>',
                 unsafe_allow_html=True,
             )
         else:
@@ -517,6 +579,7 @@ def page_navbar(search_placeholder: str = "Search listings…", search_key: str 
                 unsafe_allow_html=True,
             )
 
+    # ── Search ─────────────────────────────────────────────────────────────
     with col_search:
         query = st.text_input(
             "",
@@ -525,24 +588,29 @@ def page_navbar(search_placeholder: str = "Search listings…", search_key: str 
             key=search_key,
         )
 
-    with col_actions:
+    # ── Saved button ───────────────────────────────────────────────────────
+    with col_saved:
         if user:
             fav_count = len(user.get("favorites", []))
-            fav_label  = f"Saved ({fav_count})" if fav_count else "Saved"
-            avatar_html = _avatar_html(user["student_id"], user["name"], size=30)
+            fav_label = f"Saved  ({fav_count})" if fav_count else "Saved"
+            st.write("")  # align vertically
+            if st.button(fav_label, key=f"nav_saved_{search_key}", use_container_width=True):
+                st.session_state.profile_active_tab = 1
+                st.switch_page("pages/3_My_Profile.py")
 
-            st.markdown(
-                f'<div style="display:flex;align-items:center;gap:8px;padding-top:6px;">'
-                f'<a href="/3_My_Profile" style="text-decoration:none;">'
-                f'<span style="font-size:0.75rem;color:#4A6A6A;">{fav_label}</span></a>'
-                f'<a href="/3_My_Profile" style="text-decoration:none;">{avatar_html}</a>'
-                f'</div>',
-                unsafe_allow_html=True,
-            )
-        else:
-            query = ""
+    # ── Profile avatar button ───────────────────────────────────────────────
+    with col_profile:
+        if user:
+            st.write("")
+            initials = "".join(w[0].upper() for w in user["name"].split()[:2])
+            if st.button(initials, key=f"nav_profile_{search_key}", use_container_width=True):
+                st.session_state.profile_active_tab = 0
+                st.switch_page("pages/3_My_Profile.py")
 
-    st.markdown('<hr style="margin:8px 0 16px;border-color:#1E3232;"/>', unsafe_allow_html=True)
+    st.markdown(
+        '<hr style="margin:6px 0 14px;border:none;border-top:1px solid #1A1A1A;"/>',
+        unsafe_allow_html=True,
+    )
     return query
 
 
@@ -555,28 +623,9 @@ def auth_gate():
         st.stop()
 
 
-# ── Sidebar nav links ──────────────────────────────────────────────────────
-
-def sidebar_nav():
-    with st.sidebar:
-        st.markdown(
-            '<p style="font-size:0.65rem;letter-spacing:0.14em;color:#3A5A5A;'
-            'text-transform:uppercase;margin:0.5rem 0 0.3rem;">Menu</p>',
-            unsafe_allow_html=True,
-        )
-        st.page_link("app.py",                  label="Home")
-        st.page_link("pages/1_Browse.py",        label="Browse Listings")
-        st.page_link("pages/2_Post_Listing.py",  label="Post a Listing")
-        st.page_link("pages/3_My_Profile.py",    label="My Profile")
-
-
 # ── Listing card ───────────────────────────────────────────────────────────
 
 def listing_card(listing: dict, show_actions: bool = True):
-    """
-    Render a marketplace listing card.
-    show_actions: show View Details + WhatsApp + Favorites.
-    """
     user   = st.session_state.get("user")
     cat    = listing.get("category", "Other")
     status = listing.get("status", "available")
@@ -584,13 +633,10 @@ def listing_card(listing: dict, show_actions: bool = True):
     abbr   = CATEGORY_INITIALS.get(cat, "OT")
     images = get_listing_images(listing)
     lid    = listing["id"]
-
-    is_fav = False
-    if user:
-        is_fav = lid in user.get("favorites", [])
+    is_fav = lid in user.get("favorites", []) if user else False
 
     with st.container(border=True):
-        # ── Image ──────────────────────────────────────────────────────────
+        # Image
         if images:
             img_path = BASE_DIR / images[0]
             if img_path.exists():
@@ -600,7 +646,7 @@ def listing_card(listing: dict, show_actions: bool = True):
         else:
             _placeholder(abbr, cat)
 
-        # ── Title ──────────────────────────────────────────────────────────
+        # Title
         st.markdown(
             f'<p style="font-size:0.9rem;font-weight:600;color:#E8F4F4;'
             f'margin:6px 0 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
@@ -608,7 +654,7 @@ def listing_card(listing: dict, show_actions: bool = True):
             unsafe_allow_html=True,
         )
 
-        # ── Price ──────────────────────────────────────────────────────────
+        # Price
         if listing.get("price_type") == "offer":
             st.markdown(
                 '<p style="font-size:0.85rem;font-weight:700;color:#F59E0B;margin:0 0 6px;">Make an Offer</p>',
@@ -622,7 +668,7 @@ def listing_card(listing: dict, show_actions: bool = True):
                 unsafe_allow_html=True,
             )
 
-        # ── Badges ─────────────────────────────────────────────────────────
+        # Badges
         cond = listing.get("condition", "")
         st.markdown(
             f'<div style="margin-bottom:6px;">'
@@ -633,7 +679,7 @@ def listing_card(listing: dict, show_actions: bool = True):
             unsafe_allow_html=True,
         )
 
-        # ── Meta ───────────────────────────────────────────────────────────
+        # Meta
         seller = listing.get("seller_name", "Unknown")
         date   = listing.get("created_at", "")[:10]
         st.markdown(
@@ -644,100 +690,7 @@ def listing_card(listing: dict, show_actions: bool = True):
         if not show_actions:
             return
 
-        # ── Actions ────────────────────────────────────────────────────────
-        btn_detail, btn_fav = st.columns([4, 1])
-        with btn_detail:
-            if st.button("View Details", key=f"det_{lid}", use_container_width=True):
-                st.session_state.selected_listing_id = lid
-                st.switch_page("pages/4_Listing_Detail.py")
-        with btn_fav:
-            fav_symbol = "♥" if is_fav else "♡"
-            if st.button(fav_symbol, key=f"fav_{lid}", help="Save to favorites"):
-                if user:
-                    new_favs = toggle_favorite(user["student_id"], lid)
-                    st.session_state.user["favorites"] = new_favs
-                    st.rerun()
-
-        # ── WhatsApp ───────────────────────────────────────────────────────
-        wa = listing.get("whatsapp", "")
-        if wa and status == "available":
-            clean = "".join(c for c in wa if c.isdigit() or c == "+")
-            msg   = urllib.parse.quote(
-                f"Hi! I saw your listing on ReNOVA: {listing['title']}"
-            )
-            st.markdown(
-                f'<a class="wa-btn" href="https://wa.me/{clean}?text={msg}" target="_blank">'
-                f"Contact on WhatsApp</a>",
-                unsafe_allow_html=True,
-            )
-
-
-# ── Housing card ───────────────────────────────────────────────────────────
-
-def housing_card(listing: dict):
-    """Render a housing listing card with rent-focused layout."""
-    user   = st.session_state.get("user")
-    status = listing.get("status", "available")
-    status_label, _, _ = STATUS_BADGE.get(status, STATUS_BADGE["available"])
-    images = get_listing_images(listing)
-    lid    = listing["id"]
-    is_fav = lid in user.get("favorites", []) if user else False
-
-    with st.container(border=True):
-        # ── Image ──────────────────────────────────────────────────────────
-        if images:
-            img_path = BASE_DIR / images[0]
-            if img_path.exists():
-                st.image(str(img_path), use_container_width=True)
-            else:
-                _placeholder_housing()
-        else:
-            _placeholder_housing()
-
-        # ── Location ───────────────────────────────────────────────────────
-        loc = listing.get("location", "")
-        if loc:
-            st.markdown(
-                f'<p style="font-size:0.72rem;color:#83C5BE;letter-spacing:0.06em;'
-                f'text-transform:uppercase;margin:6px 0 2px;">{loc}</p>',
-                unsafe_allow_html=True,
-            )
-
-        # ── Title ──────────────────────────────────────────────────────────
-        st.markdown(
-            f'<p style="font-size:0.9rem;font-weight:600;color:#E8F4F4;'
-            f'margin:0 0 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
-            f'{listing["title"]}</p>',
-            unsafe_allow_html=True,
-        )
-
-        # ── Rent ───────────────────────────────────────────────────────────
-        rent = float(listing.get("price", 0))
-        period = listing.get("rent_period", "month")
-        st.markdown(
-            f'<p style="font-size:1.05rem;font-weight:700;color:#B4A0FF;margin:0 0 4px;">'
-            f'€{rent:.0f} / {period}</p>',
-            unsafe_allow_html=True,
-        )
-
-        # ── Badges ─────────────────────────────────────────────────────────
-        rooms = listing.get("rooms", "")
-        avail_from = listing.get("available_from", "")
-        badges_html = (
-            f'<span class="badge badge-housing">Housing</span>'
-            f'<span class="badge badge-{status_label}">{status_label.title()}</span>'
-        )
-        if rooms:
-            badges_html += f'<span class="badge badge-cat">{rooms} room{"s" if str(rooms) != "1" else ""}</span>'
-        st.markdown(f'<div style="margin-bottom:6px;">{badges_html}</div>', unsafe_allow_html=True)
-
-        if avail_from:
-            st.markdown(
-                f'<p class="card-meta">Available from {avail_from}</p>',
-                unsafe_allow_html=True,
-            )
-
-        # ── Actions ────────────────────────────────────────────────────────
+        # Actions: View Details + heart
         btn_detail, btn_fav = st.columns([4, 1])
         with btn_detail:
             if st.button("View Details", key=f"det_{lid}", use_container_width=True):
@@ -751,15 +704,99 @@ def housing_card(listing: dict):
                     st.session_state.user["favorites"] = new_favs
                     st.rerun()
 
+        # WhatsApp
         wa = listing.get("whatsapp", "")
         if wa and status == "available":
             clean = "".join(c for c in wa if c.isdigit() or c == "+")
-            msg   = urllib.parse.quote(
-                f"Hi! I saw your housing listing on ReNOVA: {listing['title']}"
-            )
+            msg   = urllib.parse.quote(f"Hi! I saw your listing on ReNOVA: {listing['title']}")
             st.markdown(
                 f'<a class="wa-btn" href="https://wa.me/{clean}?text={msg}" target="_blank">'
-                f"Contact on WhatsApp</a>",
+                f'Contact on WhatsApp</a>',
+                unsafe_allow_html=True,
+            )
+
+
+# ── Housing card ───────────────────────────────────────────────────────────
+
+def housing_card(listing: dict):
+    user   = st.session_state.get("user")
+    status = listing.get("status", "available")
+    status_label, _, _ = STATUS_BADGE.get(status, STATUS_BADGE["available"])
+    images = get_listing_images(listing)
+    lid    = listing["id"]
+    is_fav = lid in user.get("favorites", []) if user else False
+
+    with st.container(border=True):
+        # Image
+        if images:
+            img_path = BASE_DIR / images[0]
+            if img_path.exists():
+                st.image(str(img_path), use_container_width=True)
+            else:
+                _placeholder_housing()
+        else:
+            _placeholder_housing()
+
+        # Location
+        loc = listing.get("location", "")
+        if loc:
+            st.markdown(
+                f'<p style="font-size:0.7rem;color:#9A80FF;letter-spacing:0.08em;'
+                f'text-transform:uppercase;margin:6px 0 2px;">{loc}</p>',
+                unsafe_allow_html=True,
+            )
+
+        # Title
+        st.markdown(
+            f'<p style="font-size:0.9rem;font-weight:600;color:#E8F4F4;'
+            f'margin:0 0 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+            f'{listing["title"]}</p>',
+            unsafe_allow_html=True,
+        )
+
+        # Rent
+        rent   = float(listing.get("price", 0))
+        period = listing.get("rent_period", "month")
+        st.markdown(
+            f'<p style="font-size:1.05rem;font-weight:700;color:#B4A0FF;margin:0 0 4px;">'
+            f'€{rent:.0f} / {period}</p>',
+            unsafe_allow_html=True,
+        )
+
+        # Badges
+        rooms       = listing.get("rooms", "")
+        avail_from  = listing.get("available_from", "")
+        badges_html = (
+            f'<span class="badge badge-housing">Housing</span>'
+            f'<span class="badge badge-{status_label}">{status_label.title()}</span>'
+        )
+        if rooms:
+            badges_html += f'<span class="badge badge-cat">{rooms} room{"s" if str(rooms) != "1" else ""}</span>'
+        st.markdown(f'<div style="margin-bottom:6px;">{badges_html}</div>', unsafe_allow_html=True)
+        if avail_from:
+            st.markdown(f'<p class="card-meta">Available from {avail_from}</p>', unsafe_allow_html=True)
+
+        # Actions
+        btn_d, btn_f = st.columns([4, 1])
+        with btn_d:
+            if st.button("View Details", key=f"det_{lid}", use_container_width=True):
+                st.session_state.selected_listing_id = lid
+                st.switch_page("pages/4_Listing_Detail.py")
+        with btn_f:
+            fav_symbol = "♥" if is_fav else "♡"
+            if st.button(fav_symbol, key=f"fav_{lid}", help="Save"):
+                if user:
+                    new_favs = toggle_favorite(user["student_id"], lid)
+                    st.session_state.user["favorites"] = new_favs
+                    st.rerun()
+
+        wa = listing.get("whatsapp", "")
+        if wa and status == "available":
+            clean = "".join(c for c in wa if c.isdigit() or c == "+")
+            msg   = urllib.parse.quote(f"Hi! I saw your housing listing on ReNOVA: {listing['title']}")
+            st.markdown(
+                f'<a class="wa-btn" href="https://wa.me/{clean}?text={msg}" target="_blank">'
+                f'Contact on WhatsApp</a>',
                 unsafe_allow_html=True,
             )
 
@@ -778,9 +815,9 @@ def _placeholder(abbr: str, cat: str):
 
 def _placeholder_housing():
     st.markdown(
-        '<div class="card-img-placeholder">'
+        '<div class="card-img-placeholder" style="background:linear-gradient(135deg,#000000 0%,#0A0020 100%);">'
         '<span class="cat-abbr" style="color:#2A1A5A;">HS</span>'
-        '<span class="cat-label">Housing</span>'
+        '<span class="cat-label" style="color:#1A0A3A;">Housing</span>'
         '</div>',
         unsafe_allow_html=True,
     )
