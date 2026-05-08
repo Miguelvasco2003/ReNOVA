@@ -22,19 +22,26 @@ if "user" not in st.session_state:
 # ── Login / Register ───────────────────────────────────────────────────────
 
 def show_auth_page():
-    # Hide sidebar and default nav on login page
+    # Hide sidebar, set pure black background to match logo
     st.markdown(
         """<style>
         section[data-testid="stSidebar"] { display: none !important; }
         [data-testid="stSidebarNav"] { display: none !important; }
-        .block-container { padding-top: 2rem !important; }
+        .stApp { background: #000000 !important; }
+        .block-container { padding-top: 3rem !important; max-width: 520px !important; }
+        [data-testid="stImage"] img {
+            height: auto !important;
+            border-radius: 0 !important;
+            width: 100% !important;
+            object-fit: contain !important;
+        }
         </style>""",
         unsafe_allow_html=True,
     )
 
-    _, col, _ = st.columns([1, 1.4, 1])
+    _, col, _ = st.columns([1, 2, 1])
     with col:
-        show_logo(width=320, tagline=False, description=False)
+        show_logo(width=500, tagline=False, description=False)
 
         tab_login, tab_register = st.tabs(["Login", "Create Account"])
 
