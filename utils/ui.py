@@ -90,8 +90,33 @@ def inject_css():
             width: 38px !important;
         }
 
-        /* ── Hide sidebar's own collapse button (prevent accidental close) ── */
-        [data-testid="stSidebarCollapseButton"] { display: none !important; }
+        /* ── Style sidebar collapse button so user can toggle sidebar ── */
+        [data-testid="stSidebarCollapseButton"] {
+            display: flex !important;
+            position: fixed !important;
+            top: 50% !important;
+            left: var(--sidebar-width, 21rem) !important;
+            transform: translate(-50%, -50%) !important;
+            z-index: 999 !important;
+        }
+        [data-testid="stSidebarCollapseButton"] button {
+            background: #006D77 !important;
+            color: #ffffff !important;
+            border: none !important;
+            border-radius: 0 8px 8px 0 !important;
+            width: 32px !important;
+            height: 48px !important;
+            font-size: 1rem !important;
+            box-shadow: 2px 0 12px rgba(0,109,119,0.4) !important;
+            cursor: pointer !important;
+        }
+        [data-testid="stSidebarCollapseButton"] button:hover {
+            background: #00838F !important;
+            width: 38px !important;
+        }
+        [data-testid="stSidebarCollapseButton"] button svg {
+            fill: #ffffff !important;
+        }
 
         /* ── Divider ── */
         hr { border-color: #1A1A1A !important; }
