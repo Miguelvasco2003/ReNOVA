@@ -61,6 +61,12 @@ def inject_css():
         /* ── Hide Streamlit chrome ── */
         #MainMenu, footer, header { visibility: hidden; }
 
+        /* ── Hide auto-generated page nav in sidebar ── */
+        [data-testid="stSidebarNav"] { display: none !important; }
+
+        /* ── Vertically center all column items in horizontal blocks ── */
+        [data-testid="stHorizontalBlock"] { align-items: center !important; }
+
         /* ── Make the sidebar re-open button big and visible ── */
         /* When sidebar is collapsed Streamlit shows collapsedControl */
         [data-testid="collapsedControl"] {
@@ -478,54 +484,51 @@ def _avatar_html(student_id: str, name: str, size: int = 36) -> str:
 # ── Sidebar ────────────────────────────────────────────────────────────────
 
 def sidebar_user():
+    """
+    Render the sidebar:
+      TOP  — Menu nav links
+      BOTTOM — user avatar + sign out
+    No logo in sidebar (logo lives in the top navbar only).
+    """
     user = st.session_state.get("user")
     if not user:
         return
     with st.sidebar:
-        b64 = _logo_b64()
-        if b64:
-            st.markdown(
-                f'<img src="data:image/png;base64,{b64}" '
-                f'style="width:150px;display:block;margin-bottom:8px;"/>',
-                unsafe_allow_html=True,
-            )
-        else:
-            st.markdown(
-                "<h3 style=\"font-family:'Playfair Display',serif;color:#E8F4F4;margin:0;\">"
-                'Re<span style="color:#006D77;">NOVA</span></h3>',
-                unsafe_allow_html=True,
-            )
-        st.divider()
-        avatar = _avatar_html(user["student_id"], user["name"], size=38)
-        email  = user.get("email", f"{user['student_id']}@novasbe.pt")
-        st.markdown(
-            f'<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">'
-            f'{avatar}'
-            f'<div><div style="font-size:0.85rem;font-weight:600;color:#E8F4F4;">'
-            f'{user["name"].split()[0]}</div>'
-            f'<div style="font-size:0.72rem;color:#444444;">{email}</div></div>'
-            f'</div>',
-            unsafe_allow_html=True,
-        )
-        st.write("")
-        if st.button("Sign Out", use_container_width=True, key="sidebar_signout"):
-            st.session_state.user = None
-            st.rerun()
-
-
-# ── Sidebar nav ────────────────────────────────────────────────────────────
-
-def sidebar_nav():
-    with st.sidebar:
+        # ── Nav links at the top ───────────────────────────────────────────
         st.markdown(
             '<p style="font-size:0.65rem;letter-spacing:0.14em;color:#333333;'
-            'text-transform:uppercase;margin:0.5rem 0 0.3rem;">Menu</p>',
+            'text-transform:uppercase;margin:0.6rem 0 0.4rem;">Menu</p>',
             unsafe_allow_html=True,
         )
         st.page_link("app.py",                  label="Home")
         st.page_link("pages/1_Browse.py",        label="Browse Listings")
         st.page_link("pages/2_Post_Listing.py",  label="Post a Listing")
         st.page_link("pages/3_My_Profile.py",    label="My Profile")
+
+        st.divider()
+
+        # ── User info + sign out at the bottom ────────────────────────────
+        avatar = _avatar_html(user["student_id"], user["name"], size=34)
+        email  = user.get("email", f"{user['student_id']}@novasbe.pt")
+        st.markdown(
+            f'<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">'
+            f'{avatar}'
+            f'<div>'
+            f'<div style="font-size:0.82rem;font-weight:600;color:#E8F4F4;">{user["name"]}</div>'
+            f'<div style="font-size:0.68rem;color:#444444;">{email}</div>'
+            f'</div></div>',
+            unsafe_allow_html=True,
+        )
+        if st.button("Sign Out", use_container_width=True, key="sidebar_signout"):
+            st.session_state.user = None
+            st.rerun()
+
+
+# ── Sidebar nav (kept for backward-compat — sidebar_user now handles nav) ──
+
+def sidebar_nav():
+    """No-op: navigation is now rendered inside sidebar_user()."""
+    pass
 
 
 # ── Page navbar ────────────────────────────────────────────────────────────
@@ -540,47 +543,47 @@ def page_navbar(
     """
     user = st.session_state.get("user")
 
-    col_logo, col_search, col_saved, col_profile = st.columns([1.0, 4.5, 1.0, 0.8])
+    col_logo, col_search, col_saved, col_profile = st.columns([1.1, 4.5, 1.0, 0.8])
 
     # ── Logo ───────────────────────────────────────────────────────────────
     with col_logo:
         b64 = _logo_b64()
         if b64:
+            # Use markdown div so the image sits on the same baseline as the input
             st.markdown(
+                f'<div style="display:flex;align-items:center;height:44px;">'
                 f'<img src="data:image/png;base64,{b64}" '
-                f'style="height:56px;width:auto;display:block;margin-top:2px;"/>',
+                f'style="height:68px;width:auto;margin-top:-4px;"/></div>',
                 unsafe_allow_html=True,
             )
         else:
             st.markdown(
                 "<span style=\"font-family:'Playfair Display',serif;font-weight:900;"
-                "color:#E8F4F4;font-size:1.3rem;\">Re<span style='color:#006D77;'>NOVA</span></span>",
+                "color:#E8F4F4;font-size:1.4rem;\">Re<span style='color:#006D77;'>NOVA</span></span>",
                 unsafe_allow_html=True,
             )
 
     # ── Search ─────────────────────────────────────────────────────────────
     with col_search:
         query = st.text_input(
-            "",
+            "Search",
             placeholder=search_placeholder,
             label_visibility="collapsed",
             key=search_key,
         )
 
-    # ── Saved button ───────────────────────────────────────────────────────
+    # ── Saved button (no extra st.write — alignment handled by CSS) ────────
     with col_saved:
         if user:
             fav_count = len(user.get("favorites", []))
-            fav_label = f"Saved  ({fav_count})" if fav_count else "Saved"
-            st.write("")  # align vertically
+            fav_label = f"Saved ({fav_count})" if fav_count else "Saved"
             if st.button(fav_label, key=f"nav_saved_{search_key}", use_container_width=True):
                 st.session_state.profile_active_tab = 1
                 st.switch_page("pages/3_My_Profile.py")
 
-    # ── Profile avatar button ───────────────────────────────────────────────
+    # ── Profile initials button ─────────────────────────────────────────────
     with col_profile:
         if user:
-            st.write("")
             initials = "".join(w[0].upper() for w in user["name"].split()[:2])
             if st.button(initials, key=f"nav_profile_{search_key}", use_container_width=True):
                 st.session_state.profile_active_tab = 0

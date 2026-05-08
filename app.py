@@ -112,9 +112,7 @@ if st.session_state.user is None:
 
 
 # ── Logged-in layout ───────────────────────────────────────────────────────
-sidebar_user()
-with st.sidebar:
-    sidebar_nav()
+sidebar_user()   # nav links + user info all handled inside
 
 # ── Navbar ─────────────────────────────────────────────────────────────────
 search = page_navbar(search_placeholder="Search listings…", search_key="home_search")
@@ -154,7 +152,7 @@ with chips_col:
     )
 with sort_col:
     sort_by = st.selectbox(
-        "",
+        "Sort",
         ["Newest first", "Price: Low to High", "Price: High to Low"],
         label_visibility="collapsed",
         key="home_sort",
