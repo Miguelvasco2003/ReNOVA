@@ -2,8 +2,8 @@
   "listings": [
     {
       "id": "0696f992c0f3436eb70ebbf6365ceb5c",
-      "title": "CAMA",
-      "description": "CAMA",
+      "title": "CAMA GRANDE",
+      "description": "CAMA GRANDE",
       "price": 50.0,
       "price_type": "fixed",
       "category": "Furniture",
@@ -13,7 +13,9 @@
       "whatsapp": "+351 969287871",
       "status": "available",
       "listing_type": "marketplace",
-      "images": ["images/f082159eb9cc48b8b49b1b360c58a464.jpg"],
+      "images": [
+        "images/f082159eb9cc48b8b49b1b360c58a464.jpg"
+      ],
       "image_path": "images/f082159eb9cc48b8b49b1b360c58a464.jpg",
       "created_at": "2026-04-15T11:28:05.178680"
     },
@@ -30,7 +32,9 @@
       "whatsapp": "+351 969287871",
       "status": "available",
       "listing_type": "marketplace",
-      "images": ["images/871db0738c924d40953ecc6f2455436e.webp"],
+      "images": [
+        "images/871db0738c924d40953ecc6f2455436e.webp"
+      ],
       "image_path": "images/871db0738c924d40953ecc6f2455436e.webp",
       "created_at": "2026-04-15T11:32:02.841284"
     },
@@ -47,7 +51,9 @@
       "whatsapp": "+351 969287871",
       "status": "available",
       "listing_type": "marketplace",
-      "images": ["images/e80e4f50ee904818b4b027f424e5489f.webp"],
+      "images": [
+        "images/e80e4f50ee904818b4b027f424e5489f.webp"
+      ],
       "image_path": "images/e80e4f50ee904818b4b027f424e5489f.webp",
       "created_at": "2026-04-15T19:30:22.315255"
     },
@@ -64,7 +70,9 @@
       "whatsapp": "+351 969287871",
       "status": "available",
       "listing_type": "marketplace",
-      "images": ["images/557fcbae8cb1419fa38068838509a1d5.webp"],
+      "images": [
+        "images/557fcbae8cb1419fa38068838509a1d5.webp"
+      ],
       "image_path": "images/557fcbae8cb1419fa38068838509a1d5.webp",
       "created_at": "2026-04-15T19:36:45.588532"
     }

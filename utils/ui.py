@@ -54,18 +54,16 @@ def inject_css():
             border-right: 1px solid #1A1A1A !important;
         }
         .block-container {
-            padding-top: 1.2rem !important;
+            padding-top: 0.5rem !important;
             padding-bottom: 2rem !important;
         }
 
-        /* ── Hide Streamlit chrome ── */
-        #MainMenu, footer, header { visibility: hidden; }
+        /* ── Hide Streamlit chrome completely (display:none removes space too) ── */
+        #MainMenu { visibility: hidden; }
+        header, footer { display: none !important; }
 
         /* ── Hide auto-generated page nav in sidebar ── */
         [data-testid="stSidebarNav"] { display: none !important; }
-
-        /* ── Vertically center all column items in horizontal blocks ── */
-        [data-testid="stHorizontalBlock"] { align-items: center !important; }
 
         /* ── Make the sidebar re-open button big and visible ── */
         /* When sidebar is collapsed Streamlit shows collapsedControl */
@@ -503,6 +501,7 @@ def sidebar_user():
         st.page_link("app.py",                  label="Home")
         st.page_link("pages/1_Browse.py",        label="Browse Listings")
         st.page_link("pages/2_Post_Listing.py",  label="Post a Listing")
+        st.page_link("pages/6_Housing.py",       label="Housing Listings")
         st.page_link("pages/3_My_Profile.py",    label="My Profile")
 
         st.divider()
