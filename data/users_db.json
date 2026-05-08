@@ -6,6 +6,8 @@
       "email": "71888@novasbe.pt",
       "name": "Miguel Teles Pepino",
       "whatsapp": "+351 969287871",
+      "favorites": [],
+      "profile_photo": "",
       "created_at": "2026-04-14T18:31:37.505860"
     },
     "51446": {
@@ -14,6 +16,8 @@
       "email": "51446@novasbe.pt",
       "name": "Duarte",
       "whatsapp": "+351 914075744",
+      "favorites": [],
+      "profile_photo": "",
       "created_at": "2026-04-15T11:21:24.826301"
     }
   }

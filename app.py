@@ -1,13 +1,14 @@
 import streamlit as st
 from utils.db import ensure_dirs, load_listings
 from utils.auth import login_user, register_user
-from utils.ui import (inject_css, listing_card, sidebar_user,
-                      show_logo, show_page_header,
-                      CATEGORIES, CATEGORY_ICONS)
+from utils.ui import (
+    inject_css, listing_card, housing_card, sidebar_user, sidebar_nav,
+    show_logo, page_navbar, CATEGORIES, CATEGORY_ICONS,
+)
 
 st.set_page_config(
     page_title="ReNOVA – Nova SBE Marketplace",
-    page_icon="🔄",
+    page_icon="",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -19,14 +20,13 @@ if "user" not in st.session_state:
     st.session_state.user = None
 
 
-# ── Login / Register ───────────────────────────────────────────────────────
+# ── Auth page ──────────────────────────────────────────────────────────────
 
 def show_auth_page():
-    # Hide sidebar, set pure black background to match logo
     st.markdown(
         """<style>
         section[data-testid="stSidebar"] { display: none !important; }
-        [data-testid="stSidebarNav"] { display: none !important; }
+        [data-testid="stSidebarNav"]     { display: none !important; }
         .stApp { background: #000000 !important; }
         .block-container {
             padding-top: 4rem !important;
@@ -39,10 +39,7 @@ def show_auth_page():
             border-radius: 0 !important;
             object-fit: contain !important;
         }
-        /* Wider form */
-        [data-testid="stForm"] {
-            padding: 2rem 2.5rem !important;
-        }
+        [data-testid="stForm"] { padding: 2rem 2.5rem !important; }
         </style>""",
         unsafe_allow_html=True,
     )
@@ -114,21 +111,16 @@ if st.session_state.user is None:
     st.stop()
 
 
-# ── Logged-in home ─────────────────────────────────────────────────────────
+# ── Logged-in layout ───────────────────────────────────────────────────────
 sidebar_user()
 
 with st.sidebar:
-    st.markdown(
-        '<p style="font-size:0.65rem;letter-spacing:0.14em;color:#3A5A5A;'
-        'text-transform:uppercase;margin:0.5rem 0 0.3rem;">Menu</p>',
-        unsafe_allow_html=True,
-    )
-    st.page_link("app.py",                  label="🏠  Home")
-    st.page_link("pages/1_Browse.py",       label="🔍  Browse Listings")
-    st.page_link("pages/2_Post_Listing.py", label="➕  Post a Listing")
-    st.page_link("pages/3_My_Profile.py",   label="👤  My Profile")
+    sidebar_nav()
 
-# ── Page header ────────────────────────────────────────────────────────────
+# ── Navbar with search ─────────────────────────────────────────────────────
+search = page_navbar(search_placeholder="Search listings…", search_key="home_search")
+
+# ── Action buttons row ─────────────────────────────────────────────────────
 col_title, col_btns = st.columns([4, 1])
 with col_title:
     st.markdown(
@@ -137,49 +129,45 @@ with col_title:
         unsafe_allow_html=True,
     )
 with col_btns:
-    st.write("")
-    if st.button("My Profile", use_container_width=True):
+    if st.button("My Profile", use_container_width=True, key="btn_profile"):
         st.switch_page("pages/3_My_Profile.py")
-    if st.button("＋ Post a Listing", type="primary", use_container_width=True):
+    if st.button("Post a Listing", type="primary", use_container_width=True, key="btn_post"):
         st.switch_page("pages/2_Post_Listing.py")
 
 st.divider()
 
-# ── Load listings ──────────────────────────────────────────────────────────
+# ── Load all listings ──────────────────────────────────────────────────────
 all_listings = load_listings()["listings"]
+marketplace  = [l for l in all_listings if l.get("listing_type", "marketplace") == "marketplace"]
+housing      = [l for l in all_listings if l.get("listing_type") == "housing"]
 
-# ── Search + sort ──────────────────────────────────────────────────────────
-s1, s2 = st.columns([4, 1.5])
-with s1:
-    search = st.text_input("", placeholder="🔍   Search listings…", label_visibility="collapsed")
-with s2:
+# ── Sort control ───────────────────────────────────────────────────────────
+_, sort_col = st.columns([4, 1.5])
+with sort_col:
     sort_by = st.selectbox(
-        "", ["Newest first", "Price: Low → High", "Price: High → Low"],
+        "",
+        ["Newest first", "Price: Low to High", "Price: High to Low"],
         label_visibility="collapsed",
+        key="home_sort",
     )
 
-st.write("")
-
 # ── Category chips ─────────────────────────────────────────────────────────
-counts = {"All": sum(1 for l in all_listings if l["status"] != "sold")}
+counts = {"All": sum(1 for l in marketplace if l["status"] != "sold")}
 for cat in CATEGORIES:
-    counts[cat] = sum(1 for l in all_listings if l["category"] == cat and l["status"] != "sold")
+    counts[cat] = sum(1 for l in marketplace if l["category"] == cat and l["status"] != "sold")
 
 selected_cat = st.radio(
     "category_filter",
     ["All"] + CATEGORIES,
     horizontal=True,
     label_visibility="collapsed",
-    format_func=lambda x: (
-        f"All ({counts['All']})" if x == "All"
-        else f"{CATEGORY_ICONS[x]} {x} ({counts[x]})"
-    ),
+    format_func=lambda x: f"All ({counts['All']})" if x == "All" else f"{x} ({counts[x]})",
 )
 
 st.write("")
 
-# ── Filter listings ────────────────────────────────────────────────────────
-listings = [l for l in all_listings if l["status"] != "sold"]
+# ── Filter marketplace listings ────────────────────────────────────────────
+listings = [l for l in marketplace if l["status"] != "sold"]
 
 if search:
     q = search.lower()
@@ -189,16 +177,16 @@ if selected_cat != "All":
 
 if sort_by == "Newest first":
     listings = sorted(listings, key=lambda x: x["created_at"], reverse=True)
-elif sort_by == "Price: Low → High":
+elif sort_by == "Price: Low to High":
     listings = sorted(listings, key=lambda x: x.get("price", 0) if x.get("price_type") == "fixed" else 0)
 else:
     listings = sorted(listings, key=lambda x: x.get("price", 0) if x.get("price_type") == "fixed" else 0, reverse=True)
 
-# ── Listings heading + count ───────────────────────────────────────────────
+# ── Listings heading ───────────────────────────────────────────────────────
 lc1, lc2 = st.columns([4, 1])
 with lc1:
     st.markdown(
-        '<h3 style="font-family:\'Playfair Display\',serif;color:#E8F4F4;margin:0;">Listings</h3>',
+        '<h3 style="font-family:\'Playfair Display\',serif;color:#E8F4F4;margin:0;">Marketplace</h3>',
         unsafe_allow_html=True,
     )
 with lc2:
@@ -215,7 +203,7 @@ st.write("")
 # ── Listings grid ──────────────────────────────────────────────────────────
 if not listings:
     st.info("No listings yet — be the first to post!")
-    st.page_link("pages/2_Post_Listing.py", label="➕ Post a Listing")
+    st.page_link("pages/2_Post_Listing.py", label="Post a Listing")
 else:
     COLS = 3
     for row_start in range(0, len(listings), COLS):
@@ -223,3 +211,35 @@ else:
         for col_idx, listing in enumerate(listings[row_start: row_start + COLS]):
             with cols[col_idx]:
                 listing_card(listing)
+
+
+# ── Housing section ────────────────────────────────────────────────────────
+st.markdown("<br/>", unsafe_allow_html=True)
+st.divider()
+
+h1, h2 = st.columns([4, 1])
+with h1:
+    st.markdown(
+        '<h3 style="font-family:\'Playfair Display\',serif;color:#E8F4F4;margin:0;">Housing</h3>',
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        '<p style="color:#4A6A6A;font-size:0.82rem;margin:2px 0 0;">Rooms and apartments from the Nova SBE community</p>',
+        unsafe_allow_html=True,
+    )
+with h2:
+    if st.button("Post Housing", type="primary", use_container_width=True, key="btn_post_housing"):
+        st.switch_page("pages/2_Post_Listing.py")
+
+st.write("")
+
+active_housing = [l for l in housing if l["status"] != "sold"]
+if not active_housing:
+    st.info("No housing listings yet.")
+else:
+    COLS = 3
+    for row_start in range(0, len(active_housing), COLS):
+        cols = st.columns(COLS)
+        for col_idx, listing in enumerate(active_housing[row_start: row_start + COLS]):
+            with cols[col_idx]:
+                housing_card(listing)

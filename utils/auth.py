@@ -16,12 +16,14 @@ def register_user(student_id: str, password: str, name: str, whatsapp: str):
     if len(password) < 6:
         return False, "Password must be at least 6 characters."
     db["users"][student_id] = {
-        "student_id": student_id,
+        "student_id":    student_id,
         "password_hash": _hash(password),
-        "email": f"{student_id}@novasbe.pt",
-        "name": name.strip(),
-        "whatsapp": whatsapp.strip(),
-        "created_at": datetime.now().isoformat(),
+        "email":         f"{student_id}@novasbe.pt",
+        "name":          name.strip(),
+        "whatsapp":      whatsapp.strip(),
+        "favorites":     [],
+        "profile_photo": "",
+        "created_at":    datetime.now().isoformat(),
     }
     save_users(db)
     return True, "Account created successfully!"
