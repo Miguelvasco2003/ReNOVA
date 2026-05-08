@@ -65,31 +65,14 @@ def inject_css():
         /* ── Hide auto-generated page nav in sidebar ── */
         [data-testid="stSidebarNav"] { display: none !important; }
 
-        /* ── Sidebar toggle: hide native Streamlit buttons (handled by navbar ☰) ── */
+        /* ── Hide both native sidebar toggle buttons — custom ones handle this ── */
         [data-testid="stSidebarCollapseButton"] {
-            display: flex !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            overflow: hidden !important;
         }
-        [data-testid="stSidebarCollapseButton"] button {
-            background: #111111 !important;
-            color: #83C5BE !important;
-            border: 1px solid #1A1A1A !important;
-            border-radius: 6px !important;
-            width: 28px !important;
-            height: 28px !important;
-            padding: 0 !important;
-            cursor: pointer !important;
-        }
-        [data-testid="stSidebarCollapseButton"] button:hover {
-            background: #006D77 !important;
-            border-color: #006D77 !important;
-            color: #fff !important;
-        }
-        [data-testid="stSidebarCollapseButton"] button svg {
-            fill: currentColor !important;
-        }
-        /* Hide the native re-open tab — navbar ☰ handles opening */
         [data-testid="collapsedControl"] {
-            opacity: 0 !important;
+            visibility: hidden !important;
             pointer-events: none !important;
         }
 
@@ -492,6 +475,21 @@ def sidebar_user():
     if not user:
         return
     with st.sidebar:
+        # ── Close button at the very top ──────────────────────────────────
+        st.markdown(
+            "<div style='display:flex;justify-content:flex-end;margin-bottom:4px;'>"
+            "<button "
+            "onclick=\"var b=document.querySelector('[data-testid=&quot;stSidebarCollapseButton&quot;] button');if(b)b.click();\" "
+            "title='Fechar menu' "
+            "style='background:transparent;border:1px solid #1A1A1A;border-radius:6px;"
+            "color:#83C5BE;width:28px;height:28px;cursor:pointer;font-size:0.85rem;"
+            "display:flex;align-items:center;justify-content:center;'>"
+            "&#10005;"
+            "</button>"
+            "</div>",
+            unsafe_allow_html=True,
+        )
+
         # ── Nav links at the top ───────────────────────────────────────────
         st.markdown(
             '<p style="font-size:0.65rem;letter-spacing:0.14em;color:#333333;'
@@ -544,23 +542,20 @@ def page_navbar(
 
     col_menu, col_logo, col_search, col_saved, col_profile = st.columns([0.35, 1.0, 4.5, 1.0, 0.8])
 
-    # ── Hamburger — opens/closes sidebar via JS click on native button ──────
+    # ── Hamburger — clicks the hidden native collapsedControl to open sidebar ─
     with col_menu:
         st.markdown(
-            '<div style="display:flex;align-items:center;height:44px;">'
-            '<button onclick="(function(){'
-            'var o=document.querySelector(\'[data-testid=\\\"collapsedControl\\\"] button\');'
-            'var c=document.querySelector(\'[data-testid=\\\"stSidebarCollapseButton\\\"] button\');'
-            'if(o){o.click();}else if(c){c.click();}'
-            '})()" '
-            'title="Toggle menu" '
-            'style="background:#006D77;border:none;border-radius:8px;color:#fff;'
-            'width:36px;height:36px;cursor:pointer;font-size:1.25rem;'
-            'display:flex;align-items:center;justify-content:center;'
-            'box-shadow:0 2px 8px rgba(0,109,119,0.35);flex-shrink:0;">'
-            '&#9776;'
-            '</button>'
-            '</div>',
+            "<div style='display:flex;align-items:center;height:44px;'>"
+            "<button "
+            "onclick=\"var b=document.querySelector('[data-testid=&quot;collapsedControl&quot;] button');if(b)b.click();\" "
+            "title='Abrir menu' "
+            "style='background:#006D77;border:none;border-radius:8px;color:#fff;"
+            "width:36px;height:36px;cursor:pointer;font-size:1.25rem;"
+            "display:flex;align-items:center;justify-content:center;"
+            "box-shadow:0 2px 8px rgba(0,109,119,0.35);flex-shrink:0;'>"
+            "&#9776;"
+            "</button>"
+            "</div>",
             unsafe_allow_html=True,
         )
 
