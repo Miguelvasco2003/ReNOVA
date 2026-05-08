@@ -414,7 +414,7 @@ def show_logo(width: int = 300, tagline: bool = False, description: bool = False
     """Display the ReNOVA logo image."""
     logo_path = BASE_DIR / "images" / "logo.png"
     if logo_path.exists():
-        st.image(str(logo_path), width=width)
+        st.image(str(logo_path), use_container_width=True)
     else:
         # Fallback to text wordmark
         st.markdown(

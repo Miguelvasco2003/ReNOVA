@@ -28,20 +28,28 @@ def show_auth_page():
         section[data-testid="stSidebar"] { display: none !important; }
         [data-testid="stSidebarNav"] { display: none !important; }
         .stApp { background: #000000 !important; }
-        .block-container { padding-top: 3rem !important; max-width: 520px !important; }
+        .block-container {
+            padding-top: 4rem !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            max-width: 100% !important;
+        }
         [data-testid="stImage"] img {
             height: auto !important;
             border-radius: 0 !important;
-            width: 100% !important;
             object-fit: contain !important;
+        }
+        /* Wider form */
+        [data-testid="stForm"] {
+            padding: 2rem 2.5rem !important;
         }
         </style>""",
         unsafe_allow_html=True,
     )
 
-    _, col, _ = st.columns([1, 2, 1])
+    _, col, _ = st.columns([1.5, 2, 1.5])
     with col:
-        show_logo(width=500, tagline=False, description=False)
+        show_logo(width=600, tagline=False, description=False)
 
         tab_login, tab_register = st.tabs(["Login", "Create Account"])
 
