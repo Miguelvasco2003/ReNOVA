@@ -65,55 +65,32 @@ def inject_css():
         /* ── Hide auto-generated page nav in sidebar ── */
         [data-testid="stSidebarNav"] { display: none !important; }
 
-        /* ── Sidebar toggle buttons ── */
-        /* Button INSIDE open sidebar (top-right corner, collapses sidebar) */
+        /* ── Sidebar toggle: hide native Streamlit buttons (handled by navbar ☰) ── */
         [data-testid="stSidebarCollapseButton"] {
             display: flex !important;
         }
         [data-testid="stSidebarCollapseButton"] button {
-            background: #006D77 !important;
-            color: #ffffff !important;
-            border: none !important;
-            border-radius: 8px !important;
-            width: 30px !important;
-            height: 30px !important;
+            background: #111111 !important;
+            color: #83C5BE !important;
+            border: 1px solid #1A1A1A !important;
+            border-radius: 6px !important;
+            width: 28px !important;
+            height: 28px !important;
             padding: 0 !important;
             cursor: pointer !important;
         }
         [data-testid="stSidebarCollapseButton"] button:hover {
-            background: #00838F !important;
+            background: #006D77 !important;
+            border-color: #006D77 !important;
+            color: #fff !important;
         }
         [data-testid="stSidebarCollapseButton"] button svg {
-            fill: #ffffff !important;
+            fill: currentColor !important;
         }
-        /* Button shown when sidebar is CLOSED (fixed teal tab on left edge) */
+        /* Hide the native re-open tab — navbar ☰ handles opening */
         [data-testid="collapsedControl"] {
-            position: fixed !important;
-            top: 50% !important;
-            left: 0 !important;
-            transform: translateY(-50%) !important;
-            z-index: 9999 !important;
-            display: flex !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-        }
-        [data-testid="collapsedControl"] button {
-            background: #006D77 !important;
-            color: #ffffff !important;
-            border: none !important;
-            border-radius: 0 8px 8px 0 !important;
-            width: 28px !important;
-            height: 52px !important;
-            padding: 0 !important;
-            box-shadow: 3px 0 14px rgba(0,109,119,0.5) !important;
-            cursor: pointer !important;
-        }
-        [data-testid="collapsedControl"] button:hover {
-            background: #00838F !important;
-            width: 34px !important;
-        }
-        [data-testid="collapsedControl"] button svg {
-            fill: #ffffff !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
         }
 
         /* ── Divider ── */
@@ -565,7 +542,27 @@ def page_navbar(
     """
     user = st.session_state.get("user")
 
-    col_logo, col_search, col_saved, col_profile = st.columns([1.1, 4.5, 1.0, 0.8])
+    col_menu, col_logo, col_search, col_saved, col_profile = st.columns([0.35, 1.0, 4.5, 1.0, 0.8])
+
+    # ── Hamburger — opens/closes sidebar via JS click on native button ──────
+    with col_menu:
+        st.markdown(
+            '<div style="display:flex;align-items:center;height:44px;">'
+            '<button onclick="(function(){'
+            'var o=document.querySelector(\'[data-testid=\\\"collapsedControl\\\"] button\');'
+            'var c=document.querySelector(\'[data-testid=\\\"stSidebarCollapseButton\\\"] button\');'
+            'if(o){o.click();}else if(c){c.click();}'
+            '})()" '
+            'title="Toggle menu" '
+            'style="background:#006D77;border:none;border-radius:8px;color:#fff;'
+            'width:36px;height:36px;cursor:pointer;font-size:1.25rem;'
+            'display:flex;align-items:center;justify-content:center;'
+            'box-shadow:0 2px 8px rgba(0,109,119,0.35);flex-shrink:0;">'
+            '&#9776;'
+            '</button>'
+            '</div>',
+            unsafe_allow_html=True,
+        )
 
     # ── Logo ───────────────────────────────────────────────────────────────
     with col_logo:
