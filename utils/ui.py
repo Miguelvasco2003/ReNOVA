@@ -65,15 +65,10 @@ def inject_css():
         /* ── Hide auto-generated page nav in sidebar ── */
         [data-testid="stSidebarNav"] { display: none !important; }
 
-        /* ── Hide both native sidebar toggle buttons — custom ones handle this ── */
-        [data-testid="stSidebarCollapseButton"] {
-            visibility: hidden !important;
-            height: 0 !important;
-            overflow: hidden !important;
-        }
+        /* ── Hide Streamlit's native sidebar toggle buttons completely ── */
+        [data-testid="stSidebarCollapseButton"],
         [data-testid="collapsedControl"] {
-            visibility: hidden !important;
-            pointer-events: none !important;
+            display: none !important;
         }
 
         /* ── Divider ── */
@@ -398,6 +393,16 @@ def inject_css():
         unsafe_allow_html=True,
     )
 
+    # ── Dynamic: hide sidebar when closed ──────────────────────────────────
+    if not st.session_state.get("sidebar_open", True):
+        st.markdown(
+            "<style>"
+            "section[data-testid='stSidebar']{display:none!important;}"
+            "section[data-testid='stMain']{margin-left:0!important;padding-left:0!important;}"
+            "</style>",
+            unsafe_allow_html=True,
+        )
+
 
 # ── Logo helpers ───────────────────────────────────────────────────────────
 
@@ -476,19 +481,9 @@ def sidebar_user():
         return
     with st.sidebar:
         # ── Close button at the very top ──────────────────────────────────
-        st.markdown(
-            "<div style='display:flex;justify-content:flex-end;margin-bottom:4px;'>"
-            "<button "
-            "onclick=\"var b=document.querySelector('[data-testid=&quot;stSidebarCollapseButton&quot;] button');if(b)b.click();\" "
-            "title='Fechar menu' "
-            "style='background:transparent;border:1px solid #1A1A1A;border-radius:6px;"
-            "color:#83C5BE;width:28px;height:28px;cursor:pointer;font-size:0.85rem;"
-            "display:flex;align-items:center;justify-content:center;'>"
-            "&#10005;"
-            "</button>"
-            "</div>",
-            unsafe_allow_html=True,
-        )
+        if st.button("✕ Fechar", key="sidebar_close_btn", use_container_width=True):
+            st.session_state.sidebar_open = False
+            st.rerun()
 
         # ── Nav links at the top ───────────────────────────────────────────
         st.markdown(
@@ -542,22 +537,14 @@ def page_navbar(
 
     col_menu, col_logo, col_search, col_saved, col_profile = st.columns([0.35, 1.0, 4.5, 1.0, 0.8])
 
-    # ── Hamburger — clicks the hidden native collapsedControl to open sidebar ─
+    # ── Hamburger — pure Python toggle via session_state ──────────────────
+    if "sidebar_open" not in st.session_state:
+        st.session_state.sidebar_open = True
     with col_menu:
-        st.markdown(
-            "<div style='display:flex;align-items:center;height:44px;'>"
-            "<button "
-            "onclick=\"var b=document.querySelector('[data-testid=&quot;collapsedControl&quot;] button');if(b)b.click();\" "
-            "title='Abrir menu' "
-            "style='background:#006D77;border:none;border-radius:8px;color:#fff;"
-            "width:36px;height:36px;cursor:pointer;font-size:1.25rem;"
-            "display:flex;align-items:center;justify-content:center;"
-            "box-shadow:0 2px 8px rgba(0,109,119,0.35);flex-shrink:0;'>"
-            "&#9776;"
-            "</button>"
-            "</div>",
-            unsafe_allow_html=True,
-        )
+        if st.button("☰", key=f"hamburger_{search_key}", type="primary",
+                     help="Abrir/fechar menu"):
+            st.session_state.sidebar_open = not st.session_state.sidebar_open
+            st.rerun()
 
     # ── Logo ───────────────────────────────────────────────────────────────
     with col_logo:
