@@ -65,56 +65,54 @@ def inject_css():
         /* ── Hide auto-generated page nav in sidebar ── */
         [data-testid="stSidebarNav"] { display: none !important; }
 
-        /* ── Make the sidebar re-open button big and visible ── */
-        /* When sidebar is collapsed Streamlit shows collapsedControl */
+        /* ── Sidebar toggle buttons ── */
+        /* Button INSIDE open sidebar (top-right corner, collapses sidebar) */
+        [data-testid="stSidebarCollapseButton"] {
+            display: flex !important;
+        }
+        [data-testid="stSidebarCollapseButton"] button {
+            background: #006D77 !important;
+            color: #ffffff !important;
+            border: none !important;
+            border-radius: 8px !important;
+            width: 30px !important;
+            height: 30px !important;
+            padding: 0 !important;
+            cursor: pointer !important;
+        }
+        [data-testid="stSidebarCollapseButton"] button:hover {
+            background: #00838F !important;
+        }
+        [data-testid="stSidebarCollapseButton"] button svg {
+            fill: #ffffff !important;
+        }
+        /* Button shown when sidebar is CLOSED (fixed teal tab on left edge) */
         [data-testid="collapsedControl"] {
             position: fixed !important;
             top: 50% !important;
             left: 0 !important;
             transform: translateY(-50%) !important;
-            z-index: 999 !important;
+            z-index: 9999 !important;
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
         [data-testid="collapsedControl"] button {
             background: #006D77 !important;
             color: #ffffff !important;
             border: none !important;
             border-radius: 0 8px 8px 0 !important;
-            width: 32px !important;
-            height: 48px !important;
-            font-size: 1.1rem !important;
-            box-shadow: 2px 0 12px rgba(0,109,119,0.4) !important;
+            width: 28px !important;
+            height: 52px !important;
+            padding: 0 !important;
+            box-shadow: 3px 0 14px rgba(0,109,119,0.5) !important;
             cursor: pointer !important;
         }
         [data-testid="collapsedControl"] button:hover {
             background: #00838F !important;
-            width: 38px !important;
+            width: 34px !important;
         }
-
-        /* ── Style sidebar collapse button so user can toggle sidebar ── */
-        [data-testid="stSidebarCollapseButton"] {
-            display: flex !important;
-            position: fixed !important;
-            top: 50% !important;
-            left: var(--sidebar-width, 21rem) !important;
-            transform: translate(-50%, -50%) !important;
-            z-index: 999 !important;
-        }
-        [data-testid="stSidebarCollapseButton"] button {
-            background: #006D77 !important;
-            color: #ffffff !important;
-            border: none !important;
-            border-radius: 0 8px 8px 0 !important;
-            width: 32px !important;
-            height: 48px !important;
-            font-size: 1rem !important;
-            box-shadow: 2px 0 12px rgba(0,109,119,0.4) !important;
-            cursor: pointer !important;
-        }
-        [data-testid="stSidebarCollapseButton"] button:hover {
-            background: #00838F !important;
-            width: 38px !important;
-        }
-        [data-testid="stSidebarCollapseButton"] button svg {
+        [data-testid="collapsedControl"] button svg {
             fill: #ffffff !important;
         }
 
