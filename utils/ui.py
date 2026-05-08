@@ -61,6 +61,34 @@ def inject_css():
         /* ── Hide Streamlit chrome ── */
         #MainMenu, footer, header { visibility: hidden; }
 
+        /* ── Make the sidebar re-open button big and visible ── */
+        /* When sidebar is collapsed Streamlit shows collapsedControl */
+        [data-testid="collapsedControl"] {
+            position: fixed !important;
+            top: 50% !important;
+            left: 0 !important;
+            transform: translateY(-50%) !important;
+            z-index: 999 !important;
+        }
+        [data-testid="collapsedControl"] button {
+            background: #006D77 !important;
+            color: #ffffff !important;
+            border: none !important;
+            border-radius: 0 8px 8px 0 !important;
+            width: 32px !important;
+            height: 48px !important;
+            font-size: 1.1rem !important;
+            box-shadow: 2px 0 12px rgba(0,109,119,0.4) !important;
+            cursor: pointer !important;
+        }
+        [data-testid="collapsedControl"] button:hover {
+            background: #00838F !important;
+            width: 38px !important;
+        }
+
+        /* ── Hide sidebar's own collapse button (prevent accidental close) ── */
+        [data-testid="stSidebarCollapseButton"] { display: none !important; }
+
         /* ── Divider ── */
         hr { border-color: #1A1A1A !important; }
 
@@ -334,21 +362,6 @@ def inject_css():
         }
         .wa-btn:hover { background: #25D366; color: #000 !important; }
 
-        /* ── Hamburger button ── */
-        .ham-btn {
-            background: #0D0D0D;
-            border: 1px solid #1A1A1A;
-            color: #A8C8C8;
-            border-radius: 6px;
-            padding: 7px 10px;
-            cursor: pointer;
-            font-size: 1.1rem;
-            line-height: 1;
-            transition: all 0.15s;
-            margin-top: 4px;
-        }
-        .ham-btn:hover { background: #181818; color: #E8F4F4; border-color: #006D77; }
-
         /* ── Navbar saved/profile mini-buttons ── */
         .nav-action-btn {
             background: transparent !important;
@@ -522,46 +535,12 @@ def page_navbar(
     search_key: str = "navbar_search",
 ) -> str:
     """
-    Top navbar: hamburger | logo | search bar | Saved button | avatar button.
+    Top navbar: logo | search bar | Saved button | avatar button.
     Returns the current search query.
     """
     user = st.session_state.get("user")
 
-    # JS to toggle Streamlit's native sidebar button (handles both expand & collapse)
-    _sidebar_js = """
-    (function(){
-        var selectors = [
-            '[data-testid="collapsedControl"] button',
-            '[data-testid="stSidebarCollapseButton"] button',
-            'button[aria-label="Close sidebar"]',
-            'button[aria-label="Open sidebar"]'
-        ];
-        for(var s of selectors){
-            var btn = document.querySelector(s);
-            if(btn){ btn.click(); return; }
-        }
-        // Fallback: iterate all buttons
-        var all = document.querySelectorAll('button');
-        for(var b of all){
-            var tid = b.getAttribute('data-testid') || '';
-            var ari = b.getAttribute('aria-label') || '';
-            if(tid.toLowerCase().includes('collapse') || ari.toLowerCase().includes('sidebar')){
-                b.click(); return;
-            }
-        }
-    })()
-    """.replace("\n", " ").replace("    ", "")
-
-    col_ham, col_logo, col_search, col_saved, col_profile = st.columns(
-        [0.4, 1.0, 4.5, 1.0, 0.8]
-    )
-
-    # ── Hamburger ──────────────────────────────────────────────────────────
-    with col_ham:
-        st.markdown(
-            f'<button class="ham-btn" onclick="{_sidebar_js}">&#9776;</button>',
-            unsafe_allow_html=True,
-        )
+    col_logo, col_search, col_saved, col_profile = st.columns([1.0, 4.5, 1.0, 0.8])
 
     # ── Logo ───────────────────────────────────────────────────────────────
     with col_logo:
