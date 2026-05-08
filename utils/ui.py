@@ -410,53 +410,26 @@ def inject_css():
     )
 
 
-def show_logo(width: int = 220, tagline: bool = False, description: bool = False):
-    """Display the ReNOVA wordmark."""
-    st.markdown(
-        '<h1 style="'
-        "font-family:'Playfair Display',serif;"
-        "color:#E8F4F4;"
-        "margin:0 0 0.1rem;"
-        "font-size:4rem;"
-        "font-weight:900;"
-        "letter-spacing:-0.03em;"
-        'line-height:1;">'
-        'Re<span style="color:#006D77;">NOVA</span>'
-        '</h1>',
-        unsafe_allow_html=True,
-    )
+def show_logo(width: int = 300, tagline: bool = False, description: bool = False):
+    """Display the ReNOVA logo image."""
+    logo_path = BASE_DIR / "images" / "logo.png"
+    if logo_path.exists():
+        st.image(str(logo_path), width=width)
+    else:
+        # Fallback to text wordmark
+        st.markdown(
+            '<h1 style="font-family:\'Playfair Display\',serif;color:#E8F4F4;'
+            'margin:0;font-size:4rem;font-weight:900;letter-spacing:-0.03em;line-height:1;">'
+            'Re<span style="color:#006D77;">NOVA</span></h1>',
+            unsafe_allow_html=True,
+        )
     if tagline:
         st.markdown(
-            '<p style="'
-            "font-family:'Playfair Display',serif;"
-            "font-style:italic;"
-            "color:#83C5BE;"
-            "font-size:1.1rem;"
-            "margin:0.3rem 0 0;"
-            'letter-spacing:0.01em;">'
-            "Give it a NOVA life."
-            "</p>",
+            '<p style="font-family:\'Playfair Display\',serif;font-style:italic;'
+            'color:#83C5BE;font-size:1.1rem;margin:0.3rem 0 0;letter-spacing:0.01em;">'
+            "Give it a NOVA life.</p>",
             unsafe_allow_html=True,
         )
-    if description:
-        st.markdown(
-            '<p style="'
-            "color:#4A6A6A;"
-            "font-size:0.8rem;"
-            "margin:0.5rem 0 0;"
-            'letter-spacing:0.04em;">'
-            "The Nova SBE community marketplace."
-            "</p>",
-            unsafe_allow_html=True,
-        )
-    st.markdown(
-        '<div style="'
-        "width:36px;height:2px;"
-        "background:#006D77;"
-        'margin:1.1rem 0 1.3rem;">'
-        "</div>",
-        unsafe_allow_html=True,
-    )
 
 
 def show_page_header():
@@ -476,12 +449,15 @@ def sidebar_user():
     if not user:
         return
     with st.sidebar:
-        st.markdown(
-            "<h2 style=\"font-family:'Playfair Display',serif;color:#E8F4F4;margin:0;font-weight:900;\">"
-            'Re<span style="color:#006D77;">NOVA</span></h2>'
-            '<p style="font-size:0.6rem;letter-spacing:0.18em;color:#3A5A5A;margin:3px 0 0;text-transform:uppercase;">Nova SBE Marketplace</p>',
-            unsafe_allow_html=True,
-        )
+        logo_path = BASE_DIR / "images" / "logo.png"
+        if logo_path.exists():
+            st.image(str(logo_path), width=160)
+        else:
+            st.markdown(
+                "<h2 style=\"font-family:'Playfair Display',serif;color:#E8F4F4;margin:0;font-weight:900;\">"
+                'Re<span style="color:#006D77;">NOVA</span></h2>',
+                unsafe_allow_html=True,
+            )
         st.divider()
 
         # Avatar with initials
