@@ -1,12 +1,12 @@
 import streamlit as st
 from utils.db import load_listings
-from utils.ui import inject_css, auth_gate, sidebar_user, page_navbar, housing_card
+from utils.ui import inject_css, auth_gate, sidebar_user, page_navbar, housing_card, sidebar_state
 
 st.set_page_config(
     page_title="Housing – ReNOVA",
     page_icon="",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state=sidebar_state(),
 )
 
 inject_css()

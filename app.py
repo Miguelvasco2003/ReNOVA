@@ -3,14 +3,14 @@ from utils.db import ensure_dirs, load_listings
 from utils.auth import login_user, register_user
 from utils.ui import (
     inject_css, listing_card, housing_card, sidebar_user, sidebar_nav,
-    show_logo, page_navbar, CATEGORIES, CATEGORY_ICONS,
+    show_logo, page_navbar, sidebar_state, CATEGORIES, CATEGORY_ICONS,
 )
 
 st.set_page_config(
     page_title="ReNOVA – Nova SBE Marketplace",
     page_icon="",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state=sidebar_state(),
 )
 
 ensure_dirs()

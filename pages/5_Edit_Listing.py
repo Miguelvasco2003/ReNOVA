@@ -2,13 +2,13 @@ import streamlit as st
 import uuid
 from pathlib import Path
 from utils.db import load_listings, save_listings, IMAGES_DIR, get_listing_images, BASE_DIR
-from utils.ui import inject_css, sidebar_user, auth_gate, sidebar_nav, CATEGORIES, CONDITIONS
+from utils.ui import inject_css, sidebar_user, auth_gate, sidebar_nav, CATEGORIES, CONDITIONS, sidebar_state
 
 st.set_page_config(
     page_title="Edit Listing – ReNOVA",
     page_icon="",
     layout="centered",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state=sidebar_state(),
 )
 
 inject_css()

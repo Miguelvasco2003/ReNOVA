@@ -393,32 +393,15 @@ def inject_css():
         unsafe_allow_html=True,
     )
 
-    # ── Dynamic: hide sidebar when closed ──────────────────────────────────
-    if not st.session_state.get("sidebar_open", True):
-        st.markdown(
-            """<style>
-            /* Hide sidebar panel completely */
-            section[data-testid="stSidebar"],
-            [data-testid="stSidebar"],
-            div[data-testid="stSidebar"] {
-                display: none !important;
-                width: 0px !important;
-                min-width: 0px !important;
-                max-width: 0px !important;
-                overflow: hidden !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-            /* Remove the left gap the sidebar leaves behind */
-            [data-testid="stMain"] {
-                margin-left: 0px !important;
-                padding-left: 0px !important;
-            }
-            .main { margin-left: 0px !important; }
-            [data-testid="stAppViewContainer"] { padding-left: 0px !important; }
-            </style>""",
-            unsafe_allow_html=True,
-        )
+
+
+# ── Sidebar state helper ───────────────────────────────────────────────────
+
+def sidebar_state() -> str:
+    """Return 'expanded' or 'collapsed' for use in st.set_page_config.
+    Reads st.session_state.sidebar_open (defaults True = expanded).
+    """
+    return "expanded" if st.session_state.get("sidebar_open", True) else "collapsed"
 
 
 # ── Logo helpers ───────────────────────────────────────────────────────────

@@ -1,13 +1,13 @@
 import urllib.parse
 import streamlit as st
 from utils.db import load_listings, get_listing_images, toggle_favorite, BASE_DIR
-from utils.ui import inject_css, auth_gate, sidebar_user, sidebar_nav
+from utils.ui import inject_css, auth_gate, sidebar_user, sidebar_nav, sidebar_state
 
 st.set_page_config(
     page_title="Listing – ReNOVA",
     page_icon="",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state=sidebar_state(),
 )
 
 inject_css()

@@ -7,14 +7,14 @@ from utils.db import (
 )
 from utils.ui import (
     inject_css, sidebar_user, auth_gate, sidebar_nav,
-    page_navbar, listing_card, housing_card, _avatar_html,
+    page_navbar, listing_card, housing_card, _avatar_html, sidebar_state,
 )
 
 st.set_page_config(
     page_title="My Profile – ReNOVA",
     page_icon="",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state=sidebar_state(),
 )
 
 inject_css()

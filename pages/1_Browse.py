@@ -2,14 +2,14 @@ import streamlit as st
 from utils.db import load_listings
 from utils.ui import (
     inject_css, listing_card, housing_card, sidebar_user, sidebar_nav,
-    auth_gate, page_navbar, CATEGORIES, CATEGORY_ICONS,
+    auth_gate, page_navbar, CATEGORIES, CATEGORY_ICONS, sidebar_state,
 )
 
 st.set_page_config(
     page_title="Browse – ReNOVA",
     page_icon="",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state=sidebar_state(),
 )
 
 inject_css()
