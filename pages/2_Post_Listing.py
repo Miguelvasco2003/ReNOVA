@@ -123,9 +123,10 @@ if submitted:
         st.error("Please add a description.")
     elif is_housing and not locals().get("location", "").strip():
         st.error("Please add a location.")
-    elif not is_housing and price_type == "Fixed price" and price == 0.0:
-        st.warning("Are you sure the price is €0.00? You can also choose 'Make an offer'.")
-        st.stop()
+    elif is_housing and locals().get("rent", 0) <= 0:
+        st.error("Please enter a monthly rent greater than €0.")
+    elif not is_housing and price_type == "Fixed price" and price <= 0:
+        st.error("Please enter a price greater than €0, or choose 'Make an offer'.")
     else:
         # ── Save photos ────────────────────────────────────────────────────
         upload_data = st.session_state.pop("_upload_files", [])

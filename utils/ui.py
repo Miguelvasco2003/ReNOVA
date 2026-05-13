@@ -14,6 +14,23 @@ from utils.db import (
     save_users,
 )
 
+# ── Date / price helpers ───────────────────────────────────────────────────
+
+def format_date(date_str: str) -> str:
+    """Convert ISO date to readable format: '15 Apr 2026'."""
+    from datetime import datetime
+    try:
+        dt = datetime.fromisoformat(str(date_str)[:10])
+        return f"{dt.day} {dt.strftime('%b')} {dt.year}"
+    except Exception:
+        return str(date_str)[:10]
+
+
+def fmt_price(price: float) -> str:
+    """Format price in Portuguese style: €50,00."""
+    return "€" + f"{price:.2f}".replace(".", ",")
+
+
 # ── Constants ──────────────────────────────────────────────────────────────
 
 CATEGORIES = ["Furniture", "Books", "Electronics", "Clothing", "Services", "Other"]
@@ -316,13 +333,13 @@ def inject_css():
         .badge-reserved  { background: #1A1000; color: #FDE68A; border: 1px solid #3A2800; }
         .badge-sold      { background: #1A0000; color: #FCA5A5; border: 1px solid #3A0000; }
         .badge-cat       { background: #001A1C; color: #4A8A8A; }
-        .badge-cond      { background: #0D0D0D; color: #444444; border: 1px solid #1A1A1A; }
+        .badge-cond      { background: #0D0D0D; color: #888888; border: 1px solid #2A2A2A; }
         .badge-housing   { background: #0A0020; color: #B4A0FF; border: 1px solid #2A1A5A; }
 
         /* ── Card meta line ── */
         .card-meta {
             font-size: 0.72rem;
-            color: #333333;
+            color: #888888;
             margin-top: 4px;
             margin-bottom: 10px;
         }
@@ -486,7 +503,7 @@ def sidebar_user():
 
         # ── Nav links at the top ───────────────────────────────────────────
         st.markdown(
-            '<p style="font-size:0.65rem;letter-spacing:0.14em;color:#333333;'
+            '<p style="font-size:0.65rem;letter-spacing:0.14em;color:#666666;'
             'text-transform:uppercase;margin:0.6rem 0 0.4rem;">Menu</p>',
             unsafe_allow_html=True,
         )
@@ -506,7 +523,7 @@ def sidebar_user():
             f'{avatar}'
             f'<div>'
             f'<div style="font-size:0.82rem;font-weight:600;color:#E8F4F4;">{user["name"]}</div>'
-            f'<div style="font-size:0.68rem;color:#444444;">{email}</div>'
+            f'<div style="font-size:0.68rem;color:#888888;">{email}</div>'
             f'</div></div>',
             unsafe_allow_html=True,
         )
@@ -645,7 +662,7 @@ def listing_card(listing: dict, show_actions: bool = True):
             price = float(listing.get("price", 0))
             st.markdown(
                 f'<p style="font-size:1.05rem;font-weight:700;color:#83C5BE;margin:0 0 6px;">'
-                f'€{price:.2f}</p>',
+                f'{fmt_price(price)}</p>',
                 unsafe_allow_html=True,
             )
 
@@ -662,7 +679,7 @@ def listing_card(listing: dict, show_actions: bool = True):
 
         # Meta
         seller = listing.get("seller_name", "Unknown")
-        date   = listing.get("created_at", "")[:10]
+        date   = format_date(listing.get("created_at", ""))
         st.markdown(
             f'<p class="card-meta">by {seller} · {date}</p>',
             unsafe_allow_html=True,
@@ -692,7 +709,7 @@ def listing_card(listing: dict, show_actions: bool = True):
             msg   = urllib.parse.quote(f"Hi! I saw your listing on ReNOVA: {listing['title']}")
             st.markdown(
                 f'<a class="wa-btn" href="https://wa.me/{clean}?text={msg}" target="_blank">'
-                f'Contact on WhatsApp</a>',
+                f'Contact seller on WhatsApp</a>',
                 unsafe_allow_html=True,
             )
 
@@ -740,7 +757,7 @@ def housing_card(listing: dict):
         period = listing.get("rent_period", "month")
         st.markdown(
             f'<p style="font-size:1.05rem;font-weight:700;color:#B4A0FF;margin:0 0 4px;">'
-            f'€{rent:.0f} / {period}</p>',
+            f'{fmt_price(rent)} / {period}</p>',
             unsafe_allow_html=True,
         )
 
@@ -777,7 +794,7 @@ def housing_card(listing: dict):
             msg   = urllib.parse.quote(f"Hi! I saw your housing listing on ReNOVA: {listing['title']}")
             st.markdown(
                 f'<a class="wa-btn" href="https://wa.me/{clean}?text={msg}" target="_blank">'
-                f'Contact on WhatsApp</a>',
+                f'Contact seller on WhatsApp</a>',
                 unsafe_allow_html=True,
             )
 

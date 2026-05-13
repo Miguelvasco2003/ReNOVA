@@ -1,7 +1,7 @@
 import urllib.parse
 import streamlit as st
 from utils.db import load_listings, get_listing_images, toggle_favorite, BASE_DIR
-from utils.ui import inject_css, auth_gate, sidebar_user, sidebar_nav, sidebar_state
+from utils.ui import inject_css, auth_gate, sidebar_user, sidebar_nav, sidebar_state, format_date, fmt_price
 
 st.set_page_config(
     page_title="Listing – ReNOVA",
@@ -113,7 +113,7 @@ with col_info:
         price = float(listing.get("price", 0))
         price_html = (
             f'<p style="font-size:1.6rem;font-weight:700;color:#83C5BE;margin:0 0 12px;">'
-            f'€{price:.2f}</p>'
+            f'{fmt_price(price)}</p>'
         )
     st.markdown(price_html, unsafe_allow_html=True)
 
@@ -160,12 +160,12 @@ with col_info:
 
     # ── Seller ─────────────────────────────────────────────────────────────
     seller = listing.get("seller_name", "Unknown")
-    date   = listing.get("created_at", "")[:10]
+    date   = format_date(listing.get("created_at", ""))
     st.markdown(
         f'<div style="background:#111F1F;border:1px solid #1E3232;border-radius:10px;padding:12px 16px;margin-bottom:12px;">'
-        f'<p style="font-size:0.72rem;color:#3A5A5A;margin:0 0 4px;text-transform:uppercase;letter-spacing:0.08em;">Seller</p>'
+        f'<p style="font-size:0.72rem;color:#6A9A9A;margin:0 0 4px;text-transform:uppercase;letter-spacing:0.08em;">Seller</p>'
         f'<p style="font-size:0.9rem;color:#E8F4F4;font-weight:600;margin:0;">{seller}</p>'
-        f'<p style="font-size:0.72rem;color:#4A6A6A;margin:0;">Posted {date}</p>'
+        f'<p style="font-size:0.72rem;color:#888888;margin:0;">Posted {date}</p>'
         f'</div>',
         unsafe_allow_html=True,
     )

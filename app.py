@@ -47,6 +47,12 @@ def show_auth_page():
     _, col, _ = st.columns([1.5, 2, 1.5])
     with col:
         show_logo(width=600, tagline=False, description=False)
+        st.markdown(
+            '<p style="text-align:center;color:#888888;font-size:0.85rem;margin:-4px 0 20px;">'
+            'A student-only marketplace to buy, sell, reuse, and find housing '
+            'within the Nova SBE community.</p>',
+            unsafe_allow_html=True,
+        )
 
         tab_login, tab_register = st.tabs(["Login", "Create Account"])
 
@@ -141,7 +147,7 @@ counts = {"All": sum(1 for l in marketplace if l["status"] != "sold")}
 for cat in CATEGORIES:
     counts[cat] = sum(1 for l in marketplace if l["category"] == cat and l["status"] != "sold")
 
-chips_col, sort_col = st.columns([5, 1.5])
+chips_col, sort_col, status_col = st.columns([4.5, 1.5, 1.2])
 with chips_col:
     selected_cat = st.radio(
         "category_filter",
@@ -157,6 +163,13 @@ with sort_col:
         label_visibility="collapsed",
         key="home_sort",
     )
+with status_col:
+    status_filter = st.selectbox(
+        "Status",
+        ["Available", "Reserved", "All (excl. sold)"],
+        label_visibility="collapsed",
+        key="home_status",
+    )
 
 st.write("")
 
@@ -168,6 +181,10 @@ if search:
     listings = [l for l in listings if q in l["title"].lower() or q in l.get("description", "").lower()]
 if selected_cat != "All":
     listings = [l for l in listings if l["category"] == selected_cat]
+if status_filter == "Available":
+    listings = [l for l in listings if l["status"] == "available"]
+elif status_filter == "Reserved":
+    listings = [l for l in listings if l["status"] == "reserved"]
 
 if sort_by == "Newest first":
     listings = sorted(listings, key=lambda x: x["created_at"], reverse=True)

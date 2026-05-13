@@ -167,6 +167,7 @@ if active_tab == tab_options[0]:
                                         l["status"] = new_status
                                         break
                                 save_listings(db2)
+                                st.success(f"Status updated to **{new_status.title()}**.")
                                 st.rerun()
                         with b2:
                             if st.button("Edit", key=f"edit_{lst['id']}_{tab_key_suffix}", use_container_width=True):
@@ -174,19 +175,34 @@ if active_tab == tab_options[0]:
                                 st.switch_page("pages/5_Edit_Listing.py")
                         with b3:
                             if st.button("Delete", key=f"del_{lst['id']}_{tab_key_suffix}", use_container_width=True):
-                                db2 = load_listings()
-                                for img_rel in get_listing_images(lst):
-                                    img_file = BASE_DIR / img_rel
-                                    if img_file.exists():
-                                        try:
-                                            img_file.unlink()
-                                        except Exception:
-                                            pass
-                                db2["listings"] = [
-                                    l for l in db2["listings"] if l["id"] != lst["id"]
-                                ]
-                                save_listings(db2)
-                                st.rerun()
+                                st.session_state[f"confirm_del_{lst['id']}"] = True
+
+                        # ── Delete confirmation ────────────────────────────
+                        if st.session_state.get(f"confirm_del_{lst['id']}", False):
+                            st.warning(f"Delete **{lst['title']}**? This cannot be undone.")
+                            ca, cb = st.columns(2)
+                            with ca:
+                                if st.button("Yes, delete", key=f"yes_del_{lst['id']}_{tab_key_suffix}",
+                                             type="primary", use_container_width=True):
+                                    db2 = load_listings()
+                                    for img_rel in get_listing_images(lst):
+                                        img_file = BASE_DIR / img_rel
+                                        if img_file.exists():
+                                            try:
+                                                img_file.unlink()
+                                            except Exception:
+                                                pass
+                                    db2["listings"] = [
+                                        l for l in db2["listings"] if l["id"] != lst["id"]
+                                    ]
+                                    save_listings(db2)
+                                    st.session_state.pop(f"confirm_del_{lst['id']}", None)
+                                    st.rerun()
+                            with cb:
+                                if st.button("Cancel", key=f"cancel_del_{lst['id']}_{tab_key_suffix}",
+                                             use_container_width=True):
+                                    st.session_state.pop(f"confirm_del_{lst['id']}", None)
+                                    st.rerun()
 
         with sub_tabs[0]:
             render_manage(my_listings, "all")
